@@ -1,0 +1,36 @@
+대외비	NNP	3.0
+이메일	NNP	3.0
+이메일 주소	NNP	3.0
+번호	NNP	3.0
+핸드폰번호	NNP	3.0
+핸드폰	NNP	3.0
+전화번호	NNP	3.0
+주민등록번호	NNP	3.0
+카드번호	NNP	3.0
+주소	NNP	3.0
+여권번호	NNP	3.0
+신분증	NNP	3.0
+운전면허증	NNP	3.0
+건강보험증	NNP	3.0
+건강보험번호	NNP	3.0
+이름	NNP	3.0
+IP	NNP	3.0
+IP Address	NNP	3.0
+IP주소	NNP	3.0
+MAC주소	NNP	3.0
+자격증	NNP	3.0
+신용	NNP	3.0
+신용등급	NNP	3.0
+등록번호	NNP	3.0
+진료기록	NNP	3.0
+회원번호	NNP	3.0
+사번	NNP	3.0
+학력	NNP	3.0
+직업	NNP	3.0
+키	NNP	3.0
+몸무게	NNP	3.0
+혼인여부	NNP	3.0
+생년월일	NNP	3.0
+성별	NNP	3.0
+사업자번호	NNP	3.0
+사업자 번호	NNP	3.0
