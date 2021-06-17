@@ -44,3 +44,7 @@ def connect_session():
     session = res['list'][0]['xedmSession']
 
     return session
+
+# sid = connect_session()
+# res = xedm_post({'asd':1}, 'sid')
+# print(res)

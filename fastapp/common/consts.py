@@ -30,3 +30,14 @@ USING_MODEL_PATH = f'{H2O_MODEL_PATH}\\GBM_1_AutoML_20210423_140912'
 
 # URL
 XEDM_URL = '192.168.21.29:9080'
+
+# uvicorn Server setting
+APP_HOST_ADD="0.0.0.0"
+APP_PORT=8000
+
+# DB Setting
+DB_USER = 'iztbj'
+DB_PW = '1234'
+DB_ADD = '192.168.21.204'
+DB_PORT = '2345'
+DB_NAME = 'pidb'

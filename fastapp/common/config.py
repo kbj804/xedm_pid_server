@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from os import path, environ
 import logging
+from common.consts import DB_USER, DB_PW, DB_ADD, DB_PORT, DB_NAME
 base_dir = path.dirname(path.abspath(__file__))
 print(base_dir)
 # dataclass 데코레이터 이유: 해당 클래스를 Dict 형태로 추출해서 사용 가능
@@ -20,7 +21,7 @@ class LocalConfig(Config):
     PROJ_RELOAD: bool = True
     # postgresql://federer:grandestslam@localhost:5432/tennis
     # user, password, host, port, db
-    DB_URL: str = "postgresql://iztbj:1234@192.168.21.204:2345/pidb"
+    DB_URL: str = f"postgresql://{DB_USER}:{DB_PW}@{DB_ADD}:{DB_PORT}/{DB_NAME}"
 
     TRUSTED_HOSTS = ["*"]
     ALLOW_SITE = ["*"]

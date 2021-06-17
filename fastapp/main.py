@@ -16,7 +16,8 @@ from fastapi.security import APIKeyHeader
 # from Scripts.fastapp.common.config import conf
 # from Scripts.fastapp.middlewares.token_validator import access_control
 # from Scripts.fastapp.middlewares.trusted_hosts import TrustedHostMiddleware
-from Scripts.fastapp.sub_main import create_app
+from sub_main import create_app
+from common.consts import APP_HOST_ADD, APP_PORT
 
 # from Scripts.fastapp.routes import pid, ml, xedm
 
@@ -24,7 +25,7 @@ from Scripts.fastapp.sub_main import create_app
 API_KEY_HEADER = APIKeyHeader(name="Authorization", auto_error=False)
 app = create_app()
 def serve():
-    uvicorn.run(app)
+    uvicorn.run(app, host=APP_HOST_ADD, port=APP_PORT)
 if __name__ == "__main__":
     try:
         os.chdir(sys._MEIPASS)
