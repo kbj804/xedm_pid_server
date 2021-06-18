@@ -29,7 +29,7 @@ def xedm_post(data, sid):
     url = f"http://{XEDM_URL}/xedrm/json/updateDocEx?sid={sid}"
     jsondata = json.dumps(data, indent=4)
     headers = {'Content-Type': 'application/json;'}
-    res = requests.post(url, headers= headers,data = jsondata)
+    res = requests.post(url, headers= headers, data = jsondata, timeout=10 )
     print(res)
     print(jsondata)
     print("####### PUSH DONE ######")

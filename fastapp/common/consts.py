@@ -19,6 +19,18 @@ print(f'CONFIG_PATH : {_CONFIG_PATH}')
 cc = Config(_CONFIG_PATH)
 
 
+# Upload File Directory
+# Create target Directory if don't exist
+"""  linux에서 파일 업로드 할때 파일 저장공간 체크하고 없으면 생성
+storage = cc.get_map("file")
+UPLOAD_DIRECTORY = storage['STORAGE']
+if not os.path.exists(UPLOAD_DIRECTORY):
+    os.mkdir(UPLOAD_DIRECTORY)
+    print("Directory " , UPLOAD_DIRECTORY ,  " Created ")
+else:    
+    print("Directory " , UPLOAD_DIRECTORY ,  " already exists")
+"""
+
 SAMPLE_FOLDER_PATH = f'{BASE_DIR}\\data\\samples'
 TRAIN_FOLDER_PATH = f'{BASE_DIR}\\data\\train\\'
 
