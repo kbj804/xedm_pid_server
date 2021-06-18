@@ -13,6 +13,7 @@ from sqlalchemy.orm import Session, relationship
 from sqlalchemy.sql.expression import null
 
 from Scripts.fastapp.database.conn import Base, db
+# from common.consts import SUPPORT_EXT
 
 
 class BaseMixin:
@@ -217,7 +218,7 @@ class Train(Base, BaseMixin):
 class Files(Base, BaseMixin):
     __tablename__="files"
     name = Column(String, nullable=False)
-    ext =  Column(Enum("pdf", "docx", "txt","csv","xlsx", "pptx"), nullable=False)
+    ext =  Column(Enum('pdf','pptx','docx','csv','xlsx','txt','json','xml'), nullable=False)
     is_pid = Column(Boolean, default=False)
     ip_add = Column(String, nullable=True)
     file_path = Column(String, nullable=True)

@@ -25,11 +25,11 @@ from common.consts import APP_HOST_ADD, APP_PORT
 API_KEY_HEADER = APIKeyHeader(name="Authorization", auto_error=False)
 app = create_app()
 def serve():
-    uvicorn.run(app, host=APP_HOST_ADD, port=APP_PORT)
+    uvicorn.run("main:app", host=APP_HOST_ADD, port=APP_PORT, reload=True)
 if __name__ == "__main__":
     try:
         os.chdir(sys._MEIPASS)
-        print(sys._MEIPASS)
+        print(f'sys_MEIPASS : {sys._MEIPASS}')
     except:
         os.chdir(os.getcwd())
         print(os.chdir(os.getcwd()))

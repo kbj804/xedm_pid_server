@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from os import path, environ
 import logging
-from common.consts import DB_USER, DB_PW, DB_ADD, DB_PORT, DB_NAME
+from Scripts.fastapp.common.consts import DB_USER, DB_PW, DB_ADD, DB_PORT, DB_NAME
 base_dir = path.dirname(path.abspath(__file__))
 print(base_dir)
 # dataclass 데코레이터 이유: 해당 클래스를 Dict 형태로 추출해서 사용 가능

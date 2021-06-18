@@ -22,7 +22,10 @@ from pdfminer.high_level import extract_pages
 from pdfminer.layout import LTTextContainer
 import  json
 
-from Scripts.fastapp.common.consts import SAMPLE_FOLDER_PATH
+from Scripts.fastapp.common.config import get_logger
+from Scripts.fastapp.common.consts import SAMPLE_FOLDER_PATH, UPLOAD_DIRECTORY
+
+logger = get_logger()
 
 class loadFileManager:
     # 파일 이름, 확장자 분리
@@ -51,7 +54,8 @@ class loadFileManager:
             self.data = self.read_file()
 
         else:
-            print("### load_file_manager 에서 지원하지 않는 확장자 입니다. ###")
+            logger.info(f'### Error ### Load_file_manager.py 에서 지원하지 않는 확장자 입니다. : {self.name}.{self.ext}')
+            print(f"### load_file_manager 에서 지원하지 않는 확장자 입니다. ### {self.name}.{self.ext}")
             pass
             
     # 확장자에 맞는 read 함수로 매핑
@@ -210,47 +214,28 @@ class loadFileManager:
         # print(' '.join(text_runs))
         return result
 
-    def read_docx(self):
-        """
-        Docx File 변환인데, TEXT, TABLE은 어떻게든 가능하나 Page를 뽑는게 안됨
-        """
-        # with open(self.path, 'rb') as f:
-        #     source_stream = StringIO(f.read())
-        # import re
-        document = Document(self.path)
-        fullText = []
-        pn = 1
-        for para in document.paragraphs:
-            # r = re.match('Chapter \d+', para.text)
-            # print(para.text)
-            # if r:
-            #     print(r.group(),pn)
-            # for run in para.runs:
-            #     print(run._element.xml)
-                # if 'w:br' in run._element.xml and 'type="page"' in run._element.xml:
-                #     print(run._element.xml)
-                    # pn+=1
-                    # print('!!','='*50, pn)
-            # print(para.text)
-            # fullText.append(para.text)
-        # source_stream.close()
-            # print(para.paragraph_format.page_break_before)
-            for run in para.runs:
-                if 'lastRenderedPageBreak' in run._element.xml:
-                    pn += 1
-                    print(f"{pn}page -> text: {run.text}")
-                    # print(run._element.xml)
-
-        return '\n'.join(fullText)
-
     # def read_docx(self):
-    #     from docx2pdf import convert
-    #     SAMPLE_FOLDER_PATH = r'D:\\Project\\pid\\Scripts\\fastapp\\data\\samples\\'
-    #     output = SAMPLE_FOLDER_PATH + "output.pdf"
-    #     convert(self.path, output)
+    #     """
+    #     Docx File 변환인데, TEXT, TABLE은 어떻게든 가능하나 Page를 뽑는게 안됨
+    #     """
+    #     document = Document(self.path)
+    #     fullText = []
+    #     pn = 1
+    #     for para in document.paragraphs:
+    #         for run in para.runs:
+    #             if 'lastRenderedPageBreak' in run._element.xml:
+    #                 pn += 1
+    #                 print(f"{pn}page -> text: {run.text}")
+    #                 # print(run._element.xml)
+    #     return '\n'.join(fullText)
+
+    def read_docx(self):
+        from docx2pdf import convert
+        output = UPLOAD_DIRECTORY + "output.pdf"
+        convert(self.path, output)
         
-    #     self.path = output
-    #     return self.read_pdf()
+        self.path = output
+        return self.read_pdf()
 
 
     # csv 코덱문제 해결하고 엑셀읽기 하고 html읽기 하면됨 
@@ -352,16 +337,17 @@ class loadFileManager:
 
     read_function = {
         'pdf': read_pdf,
-        'hwp': read_hwp,
+        # 'hwp': read_hwp,
         'pptx': read_pptx,
         'docx': read_docx,
         'csv': read_csv,
         'xlsx': read_xlsx,
         'txt': read_txt,
-        'html': read_html,
+        # 'html': read_html,
         'json': read_json,
         'xml': read_xml
     }
+
 
 # a = loadFileManager(SAMPLE_FOLDER_PATH + 'docx_sample4.docx')
 # a = loadFileManager(SAMPLE_FOLDER_PATH + 'xml_sample.xml')

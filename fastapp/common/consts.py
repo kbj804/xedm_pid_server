@@ -1,4 +1,6 @@
 import os
+from konfig import Config
+
 
 JWT_SECRET = "ABCD1234!"
 JWT_ALGORITHM = "HS256"
@@ -10,6 +12,12 @@ MAX_API_WHITELIST = 10
 
 # Folder Path
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # fastapp/
+print(f'BASE_PATH : {BASE_DIR}')
+# Config Path
+_CONFIG_PATH = f'{BASE_DIR}\\common\\conf.ini'
+print(f'CONFIG_PATH : {_CONFIG_PATH}')
+cc = Config(_CONFIG_PATH)
+
 
 SAMPLE_FOLDER_PATH = f'{BASE_DIR}\\data\\samples'
 TRAIN_FOLDER_PATH = f'{BASE_DIR}\\data\\train\\'
@@ -29,15 +37,26 @@ USING_MODEL_PATH = f'{H2O_MODEL_PATH}\\GBM_1_AutoML_20210423_140912'
 
 
 # URL
-XEDM_URL = '192.168.21.29:9080'
+xedm = cc.get_map("xedm")
+X_URL = xedm['ADD']
+X_PORT = xedm['PORT']
+XEDM_URL = f'{X_URL}:{X_PORT}'
 
 # uvicorn Server setting
-APP_HOST_ADD="0.0.0.0"
-APP_PORT=8000
+app = cc.get_map("server")
+APP_HOST_ADD=app['HOST']
+APP_PORT=app['PORT']
+
 
 # DB Setting
-DB_USER = 'iztbj'
-DB_PW = '1234'
-DB_ADD = '192.168.21.204'
-DB_PORT = '2345'
-DB_NAME = 'pidb'
+db = cc.get_map("db")
+DB_USER = db['USER']
+DB_PW = db['PW']
+DB_ADD = db['ADD']
+DB_PORT = db['PORT']
+DB_NAME = db['NAME']
+
+# support EXT
+SUPPORT_EXT = ['pdf','pptx','docx','csv','xlsx','txt','json','xml']
+_TODO=['hwp','html']
+# ','.join(SUPPORT_EXT) 
