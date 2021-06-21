@@ -150,6 +150,8 @@ def predict_using_h2o(request, docid, sid, session, file):
     print(file_data)
     res = xedm_post(file_data, sid)
     print(res.text)
+    # remove upload file
+    os.remove(UPLOAD_DIRECTORY + file.filename)
 
 
 
@@ -173,3 +175,21 @@ async def upload_files_predict_y(request: Request, background_tasks: BackgroundT
         background_tasks.add_task(predict_using_h2o, request = request, docid=docid, sid = sid, session = session, file=file)
     return m.MessageOk()
  
+@router.post("/uploadTest")
+async def upload_files_read_test(request: Request, files: List[UploadFile] = File(...) , session: Session = Depends(db.session)):
+    """
+    params: file \n
+    return: Last File's \n
+    return Sample: \n
+    "file contents"
+    """
+    if not files:
+        raise ex.XedmUploadFailEx()
+    for file in files:
+        contents = await file.read()
+        with open(UPLOAD_DIRECTORY + file.filename, "wb") as fp:
+            fp.write(contents)
+        
+        f = loadFileManager(UPLOAD_DIRECTORY + file.filename)
+    
+    return f.data

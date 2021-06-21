@@ -158,9 +158,16 @@ class loadFileManager:
                 os.remove(self.path)
             hwp.Quit()
 
-        # f = olefile.OleFileIO(self.path)
-        # encoded_text = f.openstream('PrvText').read()
-        # decoded_text = encoded_text.decode('UTF-16')
+
+    def read_hwp_text(self):
+        import olefile 
+        result :list = []
+        f = olefile.OleFileIO(self.path)
+        encoded_text = f.openstream('PrvText').read()
+        decoded_text = encoded_text.decode('UTF-16')
+
+        result.append({"page":0, "td": decoded_text })
+        return result
         
 
 
@@ -337,7 +344,7 @@ class loadFileManager:
 
     read_function = {
         'pdf': read_pdf,
-        # 'hwp': read_hwp,
+        'hwp': read_hwp_text,
         'pptx': read_pptx,
         'docx': read_docx,
         'csv': read_csv,
