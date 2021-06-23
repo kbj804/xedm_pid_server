@@ -1,6 +1,6 @@
 import pandas as pd
 from Scripts.fastapp.common.consts import XEDM_URL, ML_MODEL_PATH
-# import requests
+import requests
 import json
 
 def preprocess(results:list):
@@ -8,7 +8,7 @@ def preprocess(results:list):
     학습용 Data Frame 생성
     """
     data: list = []
-    columns = ['id','reg_count','col1','col2','col3','col4','col5','col6','col7','col8','col9','col10']
+    columns = ['id','reg_count','column1','column2','column3','column4','column5','column6','column7','column8','column9','column10']
     for _, r in enumerate(results):
         a=[]
         a.append(r.id)
@@ -45,13 +45,15 @@ def connect_session():
 
     return session
 
-def pycaret_pred():
+def pycaret_pred(data):
     import pycaret
     from pycaret.classification import load_model, predict_model
     saved_model = load_model(ML_MODEL_PATH)
-    # pred = predict_model(saved_model, data=data.iloc[-1:])
+    pred = predict_model(saved_model, data=data)
 
-pycaret_pred()
+    return pred['Label'].tolist()
+
+# pycaret_pred()
 # sid = connect_session()
 # res = xedm_post({'asd':1}, 'sid')
 # print(res)

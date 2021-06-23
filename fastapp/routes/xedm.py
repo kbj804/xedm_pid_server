@@ -12,8 +12,7 @@ from Scripts.fastapp import models as m
 from Scripts.fastapp.errors import exceptions as ex
 from inspect import currentframe as frame
 
-# from Scripts.fastapp.utils.ml.h2o_helper import H2oClass
-from Scripts.fastapp.utils.ml.preprocess_train import preprocess, xedm_post, connect_session
+from Scripts.fastapp.utils.ml.preprocess_train import preprocess, xedm_post, connect_session, pycaret_pred
 
 from Scripts.fastapp.common.config import get_logger
 
@@ -26,7 +25,6 @@ import os
 router = APIRouter(prefix='/xedm')
 logger = get_logger()
 
-# hoo = H2oClass()
 
 # @router.get('/loadml')
 # async def load_ml_for_xedm(request: Request):
@@ -156,7 +154,7 @@ def predict_using_h2o(request, docid, sid, session, file):
 
 
 @router.post("/uploadFiles")
-async def upload_files_predict_y(request: Request, background_tasks: BackgroundTasks,docid: str, sid: str, files: List[UploadFile] = File(...) ,session: Session = Depends(db.session)):
+async def upload_files_predict_y(request: Request, background_tasks: BackgroundTasks, docid: str, sid: str, files: List[UploadFile] = File(...) ,session: Session = Depends(db.session)):
     """
     params: docid, sid(session id) file \n
     return: Last File's \n
@@ -175,8 +173,8 @@ async def upload_files_predict_y(request: Request, background_tasks: BackgroundT
         background_tasks.add_task(predict_using_h2o, request = request, docid=docid, sid = sid, session = session, file=file)
     return m.MessageOk()
  
-@router.post("/uploadTest")
-async def upload_files_read_test(request: Request, files: List[UploadFile] = File(...) , session: Session = Depends(db.session)):
+@router.post("/uploadTestPyCaret")
+async def upload_files_read_test(request: Request, background_tasks: BackgroundTasks, files: List[UploadFile] = File(...) , session: Session = Depends(db.session)):
     """
     params: file \n
     return: Last File's \n
@@ -190,7 +188,79 @@ async def upload_files_read_test(request: Request, files: List[UploadFile] = Fil
         with open(UPLOAD_DIRECTORY + file.filename, "wb") as fp:
             fp.write(contents)
         
-        f = loadFileManager(UPLOAD_DIRECTORY + file.filename)
-    
-    return f.data
+        background_tasks.add_task(predict_using_pycaret, request = request, session = session, files=file)
 
+    return m.MessageOk()
+
+def predict_using_pycaret(request, session, files):
+    print("## START PREDICT ON pyCaret ###")
+    file_data = OrderedDict()
+    pageList : list = []
+    ispid: str = 'F'
+
+    docid = "test_docid"
+
+    file_path = UPLOAD_DIRECTORY + files.filename
+    file = loadFileManager(file_path)
+    
+    if not file.data:
+        raise ex.FileExtEx(file.name)
+    
+    obj = Files.create(session, auto_commit=False, name=file.name, ext=file.ext, ip_add= request.state.ip, doc_id=docid )
+
+    # Init 
+    page = 0
+    total_reg_count = 0
+    tempList = []
+
+    logger.info(file.data)
+    for p in file.data:
+        df = preprocess_reg(p["td"])
+
+        page += 1
+        total_reg_count += df["reg_count"][0]
+        
+        if df["reg_count"][0] > 0:
+            pageList.append(str(page))
+            tempList.append(1)
+        else:
+            tempList.append(0)
+
+        Train.create(session, auto_commit=True, file_id=obj.id ,y=-1, page=p["page"]+1, text_data=p["td"],
+                                                reg_count=int(df["reg_count"][0]), column1=int(df["col1"][0]), column2=int(df["col2"][0]),
+                                                column3=int(df["col3"][0]),column4=int(df["col4"][0]),column5=int(df["col5"][0]),column6=int(df["col6"][0]),
+                                                column7=int(df["col7"][0]),column8=int(df["col8"][0]),column9=int(df["col9"][0]),column10=int(df["col10"][0])
+                    )
+    
+
+    page_list = Train.filter(file_id=obj.id).order_by("page").all()
+    df = preprocess(page_list)
+
+    # 모델 안켜져 있을 경우 로드
+
+    # PyCaret Model Load
+    preds = pycaret_pred(df)
+
+    result_list = [str(p+1) for  p, value in enumerate(preds) if value == 1]
+    # model = load_ml_model(USING_MODEL_PATH)
+    # if result_list or total_reg_count > 0:
+    if result_list or total_reg_count > 0:
+        ispid = "T"
+
+        info = literal_eval("{'is_pid': True}") # literal_eval: str -> dict
+        ret = Files.filter(id=obj.id)
+        ret.update(auto_commit=True, **info)
+
+
+    pinfo_data = {"name":"ext:pinfo", "value": ispid }
+    pPage_data = {"name":"ext:pPage", "value": ', '.join(result_list) }
+
+    file_data["attrData"] = {"docId": docid, "attrList":[pinfo_data, pPage_data]}
+    print(file_data)
+    # res = xedm_post(file_data, sid)
+    # print(res.text)
+
+    # remove upload file
+    os.remove(file_path)
+
+    return file_data
