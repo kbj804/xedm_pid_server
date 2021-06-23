@@ -1,6 +1,6 @@
 import pandas as pd
-from Scripts.fastapp.common.consts import XEDM_URL
-import requests
+from Scripts.fastapp.common.consts import XEDM_URL, ML_MODEL_PATH
+# import requests
 import json
 
 def preprocess(results:list):
@@ -45,6 +45,13 @@ def connect_session():
 
     return session
 
+def pycaret_pred():
+    import pycaret
+    from pycaret.classification import load_model, predict_model
+    saved_model = load_model(ML_MODEL_PATH)
+    # pred = predict_model(saved_model, data=data.iloc[-1:])
+
+pycaret_pred()
 # sid = connect_session()
 # res = xedm_post({'asd':1}, 'sid')
 # print(res)

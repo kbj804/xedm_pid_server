@@ -1,10 +1,10 @@
 #!d:\project\xedm_server\scripts\python.exe
-# EASY-INSTALL-ENTRY-SCRIPT: 'future==0.18.2','console_scripts','futurize'
+# EASY-INSTALL-ENTRY-SCRIPT: 'alembic==1.4.1','console_scripts','alembic'
 import re
 import sys
 
 # for compatibility with easy_install; see #2198
-__requires__ = 'future==0.18.2'
+__requires__ = 'alembic==1.4.1'
 
 try:
     from importlib.metadata import distribution
@@ -30,4 +30,4 @@ globals().setdefault('load_entry_point', importlib_load_entry_point)
 
 if __name__ == '__main__':
     sys.argv[0] = re.sub(r'(-script\.pyw?|\.exe)?$', '', sys.argv[0])
-    sys.exit(load_entry_point('future==0.18.2', 'console_scripts', 'futurize')())
+    sys.exit(load_entry_point('alembic==1.4.1', 'console_scripts', 'alembic')())

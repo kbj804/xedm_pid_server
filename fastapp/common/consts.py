@@ -47,6 +47,7 @@ H2O_MODEL_PATH = f'{BASE_DIR}\\data\\results\\ml_model\\'
 
 USING_MODEL_PATH = f'{H2O_MODEL_PATH}\\GBM_1_AutoML_20210423_140912'
 
+ML_MODEL_PATH= f'{BASE_DIR}\\data\\results\\ml_model\\auto_ml_model_0623'
 
 # URL
 xedm = cc.get_map("xedm")

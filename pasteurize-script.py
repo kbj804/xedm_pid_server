@@ -1,4 +1,4 @@
-#!d:\project\xedm\scripts\python.exe
+#!d:\project\xedm_server\scripts\python.exe
 # EASY-INSTALL-ENTRY-SCRIPT: 'future==0.18.2','console_scripts','pasteurize'
 import re
 import sys

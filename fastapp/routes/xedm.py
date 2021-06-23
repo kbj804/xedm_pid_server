@@ -5,7 +5,7 @@ from future.utils import PY2
 from sqlalchemy.orm import Session
 from starlette.requests import Request
 
-from Scripts.fastapp.common.consts import UPLOAD_DIRECTORY, USING_MODEL_PATH
+from Scripts.fastapp.common.consts import UPLOAD_DIRECTORY, USING_MODEL_PATH, ML_MODEL_PATH
 from Scripts.fastapp.database.conn import db
 from Scripts.fastapp.database.schema import Train, Files
 from Scripts.fastapp import models as m
@@ -193,3 +193,4 @@ async def upload_files_read_test(request: Request, files: List[UploadFile] = Fil
         f = loadFileManager(UPLOAD_DIRECTORY + file.filename)
     
     return f.data
+

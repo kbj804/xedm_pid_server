@@ -1,4 +1,4 @@
-#!d:\project\xedm\scripts\python.exe
+#!d:\project\xedm_server\scripts\python.exe
 """Extract pdf structure in XML format"""
 import logging
 import os.path
