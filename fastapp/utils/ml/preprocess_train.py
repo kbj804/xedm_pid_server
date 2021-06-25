@@ -1,7 +1,14 @@
 import pandas as pd
 from Scripts.fastapp.common.consts import XEDM_URL, ML_MODEL_PATH
+from Scripts.fastapp.common.config import get_logger
+
 import requests
 import json
+
+import pycaret
+from pycaret.classification import load_model, predict_model
+
+logger = get_logger()
 
 def preprocess(results:list):
     """
@@ -28,8 +35,10 @@ def xedm_post(data, sid):
     # url = f"http://183.111.96.15:7086/xedrm/json/updateDocEx?sid={sid}"
     url = f"http://{XEDM_URL}/xedrm/json/updateDocEx?sid={sid}"
     jsondata = json.dumps(data, indent=4)
+    # logger.info(jsondata)
     headers = {'Content-Type': 'application/json;'}
     res = requests.post(url, headers= headers, data = jsondata, timeout=10 )
+    logger.info(res)
     print(res)
     print(jsondata)
     print("####### PUSH DONE ######")
@@ -46,8 +55,6 @@ def connect_session():
     return session
 
 def pycaret_pred(data):
-    import pycaret
-    from pycaret.classification import load_model, predict_model
     saved_model = load_model(ML_MODEL_PATH)
     pred = predict_model(saved_model, data=data)
 
