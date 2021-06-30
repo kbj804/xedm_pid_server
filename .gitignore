@@ -33,10 +33,15 @@ MANIFEST
 # jupyter
 *.exe
 share/
+*.csv
+csv_files
 
 # data security
 ml_model/
 uploadfiles/
+share/
+ubuntu_version/
+logs.log
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
