@@ -221,28 +221,31 @@ class loadFileManager:
         # print(' '.join(text_runs))
         return result
 
-    # def read_docx(self):
-    #     """
-    #     Docx File 변환인데, TEXT, TABLE은 어떻게든 가능하나 Page를 뽑는게 안됨
-    #     """
-    #     document = Document(self.path)
-    #     fullText = []
-    #     pn = 1
-    #     for para in document.paragraphs:
-    #         for run in para.runs:
-    #             if 'lastRenderedPageBreak' in run._element.xml:
-    #                 pn += 1
-    #                 print(f"{pn}page -> text: {run.text}")
-    #                 # print(run._element.xml)
-    #     return '\n'.join(fullText)
-
     def read_docx(self):
-        from docx2pdf import convert
-        output = UPLOAD_DIRECTORY + "output.pdf"
-        convert(self.path, output)
-        
-        self.path = output
-        return self.read_pdf()
+        """
+        Docx File 변환인데, TEXT, TABLE은 어떻게든 가능하나 Page를 뽑는게 안됨
+        """
+        result=[]
+        document = Document(self.path)
+        fullText = []
+        pn = 1
+        for para in document.paragraphs:
+            for run in para.runs:
+                fullText.append(run.text)
+                if 'lastRenderedPageBreak' in run._element.xml:
+                    pn += 1
+                    print(f"{pn}page -> text: {run.text}")
+                    # print(run._element.xml)
+        result.append({"page":0, "td": '\n'.join(fullText) })
+        return result
+
+    # def read_docx(self):
+        """Linux에서 지원 안됨 docx2pdf MSoffice를 설치해야 됨"""
+    #     from docx2pdf import convert
+    #     output = UPLOAD_DIRECTORY + "output.pdf"
+    #     convert(self.path, output)
+    #     self.path = output
+    #     return self.read_pdf()
 
 
     # csv 코덱문제 해결하고 엑셀읽기 하고 html읽기 하면됨 

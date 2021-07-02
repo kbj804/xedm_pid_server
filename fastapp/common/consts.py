@@ -18,7 +18,8 @@ if CURRENT_OS == 'Windows':
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # fastapp/
     print(f'BASE_PATH : {BASE_DIR}')
     # Config Path
-    _CONFIG_PATH = f'{BASE_DIR}\\common\\conf.ini'
+    # _CONFIG_PATH = f'{BASE_DIR}\\common\\conf.ini'
+    _CONFIG_PATH = os.path.join(BASE_DIR, 'common', 'conf.ini')
     print(f'CONFIG_PATH : {_CONFIG_PATH}')
     cc = Config(_CONFIG_PATH)
 
@@ -33,24 +34,34 @@ if CURRENT_OS == 'Windows':
     else:    
         print("Directory " , UPLOAD_DIRECTORY ,  " already exists")
     """
+    DATA_FOLDER_PATH = os.path.join(BASE_DIR, 'data')
+    SAMPLE_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'samples')
+    TRAIN_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'train')
 
-    SAMPLE_FOLDER_PATH = f'{BASE_DIR}\\data\\samples'
-    TRAIN_FOLDER_PATH = f'{BASE_DIR}\\data\\train\\'
+    RESULT_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'results')
+    REGEX_FOLDER_PATH = os.path.join(RESULT_FOLDER_PATH, 'regex')
+    UPLOAD_DIRECTORY = os.path.join(RESULT_FOLDER_PATH, 'uploadfiles')
 
-    REGEX_FOLDER_PATH = f'{BASE_DIR}\\data\\results\\regex\\'
+    # PyCaret Model Path
+    ML_MODEL_FOLDER_PATH = os.path.join(RESULT_FOLDER_PATH, 'ml_model')
+    ML_MODEL_PATH = os.path.join(ML_MODEL_FOLDER_PATH, 'auto_ml_model_0623')
+    # ML_MODEL_PATH = f'{BASE_DIR}\\data\\results\\ml_model\\auto_ml_model_0623'
 
-    UPLOAD_DIRECTORY = f'{BASE_DIR}\\data\\results\\uploadfiles\\'
+    # SAMPLE_FOLDER_PATH = f'{BASE_DIR}\\data\\samples'
+    # TRAIN_FOLDER_PATH = f'{BASE_DIR}\\data\\train\\'
+    # REGEX_FOLDER_PATH = f'{BASE_DIR}\\data\\results\\regex\\'
+    # UPLOAD_DIRECTORY = f'{BASE_DIR}\\data\\results\\uploadfiles\\'
 
     # File path
-    KEYWORD_DICTIONARY_PATH = f'{BASE_DIR}\\common\\dic.txt'
-    DEFAULT_CSV_PATH = f'{BASE_DIR}\\'
+    # KEYWORD_DICTIONARY_PATH = f'{BASE_DIR}\\common\\dic.txt'
+    KEYWORD_DICTIONARY_PATH = os.path.join(BASE_DIR, 'common','dic.txt')
+    # DEFAULT_CSV_PATH = f'{BASE_DIR}\\'
 
     # Save h2o model
-    H2O_MODEL_PATH = f'{BASE_DIR}\\data\\results\\ml_model\\'
+    # H2O_MODEL_PATH = f'{BASE_DIR}\\data\\results\\ml_model\\'
+    # USING_MODEL_PATH = f'{H2O_MODEL_PATH}\\GBM_1_AutoML_20210423_140912'
 
-    USING_MODEL_PATH = f'{H2O_MODEL_PATH}\\GBM_1_AutoML_20210423_140912'
-
-    ML_MODEL_PATH= f'{BASE_DIR}\\data\\results\\ml_model\\auto_ml_model_0623'
+    
 
     # URL
     xedm = cc.get_map("xedm")
