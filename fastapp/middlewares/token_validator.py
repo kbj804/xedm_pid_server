@@ -186,3 +186,5 @@ async def exception_handler(error: Exception):
     if not isinstance(error, APIException):
         error = APIException(ex=error, detail=str(error))
     return error
+
+
