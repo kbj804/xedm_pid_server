@@ -165,6 +165,9 @@ class RegexConfigs:
             (([ㄱ-ㅎ|ㅏ-ㅣ|가-힣]|\w)+.(pdf|rtf|html|xml|csv|txt|ppt|hwp|xlxs|docx|log))
         )''', re.VERBOSE)
 
+        addressRegex1 = re.compile(r'''(
+            ([가-힣]+(시|군|구))
+        )''', re.VERBOSE)
 
         # 위 정규식 통합 Dictionary
         self.preComfile_dic = {
@@ -181,7 +184,8 @@ class RegexConfigs:
             'ImageFile': imageRegex,
             'CompressionFile': compressionRegex,
             'AudioFile': audioRegex,
-            'DocumentFile':docRegex
+            'DocumentFile': docRegex,
+            'address1' : addressRegex1
         }
 
 
