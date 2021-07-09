@@ -33,6 +33,8 @@ if CURRENT_OS == 'Linux': # 'Windows', 'MacOS'
         print("Directory " , UPLOAD_DIRECTORY ,  " already exists")
 
 
+KEYWORD_DICTIONARY_PATH = os.path.join(BASE_DIR, 'common','dic.txt')
+
 DATA_FOLDER_PATH = os.path.join(BASE_DIR, 'data')
 SAMPLE_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'samples')
 TRAIN_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'train')
@@ -44,22 +46,9 @@ UPLOAD_DIRECTORY = os.path.join(RESULT_FOLDER_PATH, 'uploadfiles')
 # PyCaret Model Path
 ML_MODEL_FOLDER_PATH = os.path.join(RESULT_FOLDER_PATH, 'ml_model')
 ML_MODEL_PATH = os.path.join(ML_MODEL_FOLDER_PATH, 'auto_ml_model_0623')
-# ML_MODEL_PATH = f'{BASE_DIR}\\data\\results\\ml_model\\auto_ml_model_0623'
-print(ML_MODEL_PATH)
-# SAMPLE_FOLDER_PATH = f'{BASE_DIR}\\data\\samples'
-# TRAIN_FOLDER_PATH = f'{BASE_DIR}\\data\\train\\'
-# REGEX_FOLDER_PATH = f'{BASE_DIR}\\data\\results\\regex\\'
-# UPLOAD_DIRECTORY = f'{BASE_DIR}\\data\\results\\uploadfiles\\'
 
-# File path
-# KEYWORD_DICTIONARY_PATH = f'{BASE_DIR}\\common\\dic.txt'
-KEYWORD_DICTIONARY_PATH = os.path.join(BASE_DIR, 'common','dic.txt')
+
 # DEFAULT_CSV_PATH = f'{BASE_DIR}\\'
-
-# Save h2o model
-# H2O_MODEL_PATH = f'{BASE_DIR}\\data\\results\\ml_model\\'
-# USING_MODEL_PATH = f'{H2O_MODEL_PATH}\\GBM_1_AutoML_20210423_140912'
-
 
 
 # URL

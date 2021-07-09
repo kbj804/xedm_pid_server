@@ -166,8 +166,25 @@ class RegexConfigs:
         )''', re.VERBOSE)
 
         addressRegex1 = re.compile(r'''(
+            (서울|인천|대구|광주|부산|울산|대전|세종|제주|경기|강원|충청|전라|경상)+(남|북|특별자치|광역|특별)?(시|도)?
+        )''', re.VERBOSE)
+
+        addressRegex2 = re.compile(r'''(
             ([가-힣]+(시|군|구))
         )''', re.VERBOSE)
+        
+        # ([가-힣A-Za-z·\d~\-\.]{2,}(로|길))
+        # 구분해야하는 끝자 : 로 길 가 음 면 동 
+        # 뒤에 숫자 오는 경우: (([가-힣A-Za-z·\d~\-\.]{2,}(로|길).[\d]+)|([가-힣A-Za-z·\d~\-\.]+(읍|동|면)\s)[\d]+)
+        addressRegex3 = re.compile(r'''(
+            ([가-힣A-Za-z·\d~\-\.]{2,}(로|길|가|읍|면|동))
+        )''', re.VERBOSE)
+
+        birthdayRegex = re.compile(r'''(
+            (19\d{2}|20\d{2})(년|\.)?(\s)?
+            (0\d|1[0-2]|\d)(월|\.)?(\s)?
+            (0[1-9]|[1-2]\d|3[01]|\d)(일)?
+        )''')
 
         # 위 정규식 통합 Dictionary
         self.preComfile_dic = {
@@ -185,7 +202,10 @@ class RegexConfigs:
             'CompressionFile': compressionRegex,
             'AudioFile': audioRegex,
             'DocumentFile': docRegex,
-            'address1' : addressRegex1
+            'AddressSiDo' : addressRegex1,
+            'AddressSiGunGu ': addressRegex2,
+            'AddressDongRoGilUb' : addressRegex3,
+            'Birthday': birthdayRegex, # 생년월일, 생일 과 같은 키워드랑 같이 써야함.
         }
 
 

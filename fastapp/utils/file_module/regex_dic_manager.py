@@ -70,6 +70,10 @@ class regexDictionaryManager(RegexConfigs):
         regex_name_list = []
         regex_result_list = []
         for i in range(0, len(keys)):
+            # ADDRESS Regex
+            if i >= 14 and i <= 16:
+                """TODO: ~ """
+            
             # result = ''
             sub_count=0
             for regex in self.origin_Dictionary[keys[i]].findall(data):
@@ -84,3 +88,8 @@ class regexDictionaryManager(RegexConfigs):
 
         
         return regex_name_list, total_count, regex_result_list
+
+
+a = regexDictionaryManager()
+r  = a.get_all_regex("asdfafdasf 010-6328-0391 서울시 영등포구 여의도 국회로 서울특별시 영등포구 여의도동 44-11 종로2가")
+print(r)

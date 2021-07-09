@@ -7,11 +7,8 @@ from Scripts.fastapp.utils.file_module.load_file_manager import loadFileManager
 
 class GenerateData:
     def __init__(self) -> None:
-        # super().__init__()
-        # self.default_csv_model_path = './regex_result/model.csv'
         self.origin_regex_dic = regexDictionaryManager()
         self.kwd = KeywordExtract(KEYWORD_DICTIONARY_PATH)
-        # self.kwd = KeywordExtract(r'D:\\Project\\tesseract\\tesseract_Project\Scripts\\tp\\nlp\\dic.txt')
 
     def set_default_datafram(self):
         self.default_model_df = pd.read_csv(DEFAULT_CSV_PATH, encoding='UTF-8')
