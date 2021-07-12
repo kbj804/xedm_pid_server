@@ -4,7 +4,7 @@ import time
 # import os
 # print(os.path.abspath(os.path.dirname(__file__)))
 from Scripts.fastapp.common.regex_config import RegexConfigs
-from Scripts.fastapp.common.consts import REGEX_FOLDER_PATH
+from Scripts.fastapp.common.consts import REGEX_FOLDER_PATH, ADDRESS_UmMyunDong, ADDRESS_SiGunGu, ADDRESS_RoGil
 
 class regexDictionaryManager(RegexConfigs):
     def __init__(self):
@@ -70,16 +70,30 @@ class regexDictionaryManager(RegexConfigs):
         regex_name_list = []
         regex_result_list = []
         for i in range(0, len(keys)):
-            # ADDRESS Regex
-            if i >= 14 and i <= 16:
-                """TODO: ~ """
-            
-            # result = ''
             sub_count=0
+            # ADDRESS Regex
             for regex in self.origin_Dictionary[keys[i]].findall(data):
-                # result += str(regex[0]) + '\n'
-                regex_result_list.append(regex[0])
-                sub_count+=1
+                print(regex)
+                if i >= 15 and i <= 16:
+                    """ADDRESS Regex
+                    ADDRESS_RoGil, ADDRESS_SiGunGu, ADDRESS_UmMyunDong,
+                    """
+                    if regex[0] in self.rogilDict:
+                        regex_result_list.append(regex[0])
+                        sub_count+=1
+                    elif regex[0] in self.sigunguDict:
+                        regex_result_list.append(regex[0])
+                        sub_count+=1
+                    elif regex[0] in self.umdDict:
+                        regex_result_list.append(regex[0])
+                        sub_count+=1
+                
+                else:
+                    # result = ''
+                    # result += str(regex[0]) + '\n'
+                    regex_result_list.append(regex[0])
+                    sub_count+=1
+
             if sub_count > 0:
                 total_count += sub_count
                 regex_name_list.append(keys[i])
@@ -91,5 +105,5 @@ class regexDictionaryManager(RegexConfigs):
 
 
 a = regexDictionaryManager()
-r  = a.get_all_regex("asdfafdasf 010-6328-0391 서울시 영등포구 여의도 국회로 서울특별시 영등포구 여의도동 44-11 종로2가")
+r  = a.get_all_regex("asdfafdasf 010-6328-0391 서울시 영등포구 여의도 국회로 서울특별시 구로구 여의도동 44-11 종로2가 모택동 짱구 걸어서 세계속으로 코로나 아니길 국회의사당로 세종대로")
 print(r)

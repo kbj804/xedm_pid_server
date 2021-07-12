@@ -16,10 +16,24 @@ print(f"CURRENT_OS is {CURRENT_OS}")
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # fastapp/
 print(f'BASE_PATH : {BASE_DIR}')
 
+# Common Path
+COMMON_PATH = os.path.join(BASE_DIR, 'common')
+KEYWORD_DICTIONARY_PATH = os.path.join(COMMON_PATH, 'dic.txt')
+
+# Addreses Path
+ADDRESS_PATH = os.path.join(COMMON_PATH, 'address')
+ADDRESS_RoGil = os.path.join(ADDRESS_PATH, 'rogil.txt')
+ADDRESS_SiGunGu = os.path.join(ADDRESS_PATH, 'sigungu.txt')
+ADDRESS_UmMyunDong = os.path.join(ADDRESS_PATH, 'umyundong.txt')
+
+
+
 # Config Path
-_CONFIG_PATH = os.path.join(BASE_DIR, 'common', 'conf.ini')
+_CONFIG_PATH = os.path.join(COMMON_PATH, 'conf.ini')
 print(f'CONFIG_PATH : {_CONFIG_PATH}')
 cc = Config(_CONFIG_PATH)
+
+
 
 if CURRENT_OS == 'Linux': # 'Windows', 'MacOS'
     """Upload File Directory
@@ -33,7 +47,6 @@ if CURRENT_OS == 'Linux': # 'Windows', 'MacOS'
         print("Directory " , UPLOAD_DIRECTORY ,  " already exists")
 
 
-KEYWORD_DICTIONARY_PATH = os.path.join(BASE_DIR, 'common','dic.txt')
 
 DATA_FOLDER_PATH = os.path.join(BASE_DIR, 'data')
 SAMPLE_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'samples')

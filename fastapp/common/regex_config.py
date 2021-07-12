@@ -1,4 +1,5 @@
 import re
+from Scripts.fastapp.common.consts import ADDRESS_UmMyunDong, ADDRESS_SiGunGu, ADDRESS_RoGil
 
 class RegexConfigs:
 
@@ -211,3 +212,20 @@ class RegexConfigs:
 
         # Dictionary로 KEY List 생성
         self.preComfile_list = list(self.preComfile_dic.keys())
+
+        # 각 주소 Dictionary 를 hash map처럼 생성후 정규식 검색에 활용
+        self.rogilDict = self.load_address_db(ADDRESS_RoGil)
+        self.sigunguDict = self.load_address_db(ADDRESS_SiGunGu)
+        self.umdDict = self.load_address_db(ADDRESS_UmMyunDong)
+
+    def load_address_db(self, data_path):
+        address_dict = {}
+        with open(data_path, 'r') as f:
+            lines = f.readlines()
+            for line in lines:
+                line = line.rstrip('\n')
+                if line in address_dict:
+                    address_dict[line] += 1
+                else:
+                    address_dict[line] = 1
+        return address_dict
