@@ -88,6 +88,7 @@ class regexDictionaryManager(RegexConfigs):
                         regex_result_list.append(regex[0])
                         sub_count+=1
                 
+                # 주소 제외 나머지 정규식 처리부분
                 else:
                     # result = ''
                     # result += str(regex[0]) + '\n'
@@ -104,6 +105,6 @@ class regexDictionaryManager(RegexConfigs):
         return regex_name_list, total_count, regex_result_list
 
 
-a = regexDictionaryManager()
-r  = a.get_all_regex("asdfafdasf 010-6328-0391 서울시 영등포구 여의도 국회로 서울특별시 구로구 여의도동 44-11 종로2가 모택동 짱구 걸어서 세계속으로 코로나 아니길 국회의사당로 세종대로")
-print(r)
+# a = regexDictionaryManager()
+# r  = a.get_all_regex("asdfafdasf 010-6328-0391 서울시 영등포구 여의도 국회로 서울특별시 구로구 여의도동 44-11 종로2가 모택동 짱구 걸어서 세계속으로 코로나 아니길 국회의사당로 세종대로")
+# print(r)

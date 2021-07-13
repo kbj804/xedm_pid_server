@@ -23,14 +23,20 @@ from common.consts import APP_HOST_ADD, APP_PORT
 # auto_error False 중요 Swagger 위에 Authorization 버튼 만듬
 API_KEY_HEADER = APIKeyHeader(name="Authorization", auto_error=False)
 app = create_app()
-def serve():
-    uvicorn.run("main:app", host=APP_HOST_ADD, port=APP_PORT, reload=True)
+def serve_dev():
+    uvicorn.run("main:app", host=APP_HOST_ADD, port=APP_PORT, reload = True)
+
+def serve_app():
+    uvicorn.run( app , host=APP_HOST_ADD, port=APP_PORT)
+
+
 if __name__ == "__main__":
     try:
         os.chdir(sys._MEIPASS)
-        print(f'sys_MEIPASS : {sys._MEIPASS}')
+        print(f'## SERVICE MODE / sys_MEIPASS : {sys._MEIPASS}')
+        serve_app()
     except:
         os.chdir(os.getcwd())
-        print(os.chdir(os.getcwd()))
-    serve()
+        print(f'## DEV MODE: {os.chdir(os.getcwd())} ##')
+        serve_dev()
     # uvicorn.run("main:app", host="0.0.0.0", port=8002, reload=False, workers=1)
