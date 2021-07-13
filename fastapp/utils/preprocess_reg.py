@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from Scripts.fastapp.utils.file_module.regex_dic_manager import regexDictionaryManager
-from Scripts.fastapp.utils.file_module.keyword_extract import KeywordExtract
-from Scripts.fastapp.utils.file_module.load_file_manager import loadFileManager
+from utils.file_module.regex_dic_manager import regexDictionaryManager
+from utils.file_module.keyword_extract import KeywordExtract
+from utils.file_module.load_file_manager import loadFileManager
 import pandas as pd
 
-from Scripts.fastapp.common.consts import SAMPLE_FOLDER_PATH, KEYWORD_DICTIONARY_PATH
+from common.consts import SAMPLE_FOLDER_PATH, KEYWORD_DICTIONARY_PATH
 
 def preprocess_reg(textdata:str):
     """

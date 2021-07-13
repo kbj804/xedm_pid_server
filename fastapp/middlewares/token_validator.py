@@ -14,23 +14,23 @@ from starlette.requests import Request
 from starlette.datastructures import URL, Headers
 from starlette.responses import JSONResponse
 from starlette.responses import PlainTextResponse, RedirectResponse, Response
-from Scripts.fastapp.errors import exceptions as ex
+from errors import exceptions as ex
 
 from starlette.types import ASGIApp, Receive, Scope, Send
 
-from Scripts.fastapp.database.conn import db
-from Scripts.fastapp.database.schema import Users, ApiKeys, Train
-from Scripts.fastapp.models import UserToken, Test
+from database.conn import db
+from database.schema import Users, ApiKeys, Train
+from models import UserToken, Test
 
-from Scripts.fastapp.common import config, consts
-from Scripts.fastapp.common.config import conf
-from Scripts.fastapp.common.consts import EXCEPT_PATH_LIST, EXCEPT_PATH_REGEX
-from Scripts.fastapp.errors.exceptions import APIException, SqlFailureEx, APIQueryStringEx
+from common import config, consts
+from common.config import conf
+from common.consts import EXCEPT_PATH_LIST, EXCEPT_PATH_REGEX
+from errors.exceptions import APIException, SqlFailureEx, APIQueryStringEx
 
 
-from Scripts.fastapp.utils.date_utils import D
-from Scripts.fastapp.utils.logger import api_logger
-from Scripts.fastapp.utils.query_utils import to_dict
+from utils.date_utils import D
+from utils.logger import api_logger
+from utils.query_utils import to_dict
 
 
 # FastAPI 공식 문서에 따라 미들웨어 생성

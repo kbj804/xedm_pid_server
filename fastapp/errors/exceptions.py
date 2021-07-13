@@ -1,4 +1,4 @@
-from Scripts.fastapp.common.consts import MAX_API_KEY
+from common.consts import MAX_API_KEY
 class StatusCode:
     HTTP_500 = 500
     HTTP_400 = 400

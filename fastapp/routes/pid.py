@@ -5,21 +5,21 @@ from fastapi import APIRouter, Depends, FastAPI, File, UploadFile
 from sqlalchemy.orm import Session
 from starlette.requests import Request
 
-from Scripts.fastapp.common.consts import UPLOAD_DIRECTORY
-from Scripts.fastapp.database.conn import db
-# from Scripts.fastapp.database.schema import Users, ApiKeys, ApiWhiteLists
-from Scripts.fastapp.database.schema import Train, Files
-from Scripts.fastapp import models as m
-from Scripts.fastapp.errors import exceptions as ex
+from common.consts import UPLOAD_DIRECTORY
+from database.conn import db
+# from database.schema import Users, ApiKeys, ApiWhiteLists
+from database.schema import Train, Files
+import models as m
+from errors import exceptions as ex
 import string
 import secrets
 from inspect import currentframe as frame
 
-from Scripts.fastapp.models import MessageOk, Test, Label
-# from Scripts.fastapp.utils.file_module.test import t_load_data
+from models import MessageOk, Test, Label
+# from utils.file_module.test import t_load_data
 
-from Scripts.fastapp.utils.file_module.load_file_manager import loadFileManager
-from Scripts.fastapp.utils.preprocess_reg import preprocess_reg
+from utils.file_module.load_file_manager import loadFileManager
+from utils.preprocess_reg import preprocess_reg
 
 import os
 

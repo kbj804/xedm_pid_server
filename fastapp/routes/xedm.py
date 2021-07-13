@@ -5,19 +5,19 @@ from fastapi import APIRouter, Depends, FastAPI, File, UploadFile, BackgroundTas
 from sqlalchemy.orm import Session
 from starlette.requests import Request
 
-from Scripts.fastapp.common.consts import UPLOAD_DIRECTORY, ML_MODEL_PATH
-from Scripts.fastapp.database.conn import db
-from Scripts.fastapp.database.schema import Train, Files
-from Scripts.fastapp import models as m
-from Scripts.fastapp.errors import exceptions as ex
+from common.consts import UPLOAD_DIRECTORY, ML_MODEL_PATH
+from database.conn import db
+from database.schema import Train, Files
+import models as m
+from errors import exceptions as ex
 from inspect import currentframe as frame
 
 from utils.file_module.load_file_manager import loadFileManager
 from utils.preprocess_reg import preprocess_reg
 
-from Scripts.fastapp.utils.ml.preprocess_train import preprocess, xedm_post, connect_session, pycaret_pred
+from utils.ml.preprocess_train import preprocess, xedm_post, connect_session, pycaret_pred
 
-from Scripts.fastapp.common.config import get_logger
+from common.config import get_logger
 
 import json
 from collections import OrderedDict
@@ -55,7 +55,8 @@ async def upload_files_read_test(request: Request, background_tasks: BackgroundT
         raise ex.XedmUploadFailEx()
     for file in files:
         contents = await file.read()
-        with open(UPLOAD_DIRECTORY + file.filename, "wb") as fp:
+        FILE_PATH = os.path.join(UPLOAD_DIRECTORY, file.filename)
+        with open(FILE_PATH, "wb") as fp:
             fp.write(contents)
         
         f = loadFileManager(UPLOAD_DIRECTORY + file.filename)
@@ -127,10 +128,8 @@ async def upload_files_predict_y(request: Request, background_tasks: BackgroundT
         raise ex.XedmUploadFailEx()
     for file in files:
         contents = await file.read()
-        print(os.path.join('./', file.filename))
-        # with open(os.path.join('./', file.filename), "wb") as fp:
-        with open(UPLOAD_DIRECTORY + file.filename, "wb") as fp:
-            # print(f'### UPLOAD DIRECTORY ### {UPLOAD_DIRECTORY + file.filename}')
+        FILE_PATH = os.path.join(UPLOAD_DIRECTORY, file.filename)
+        with open(FILE_PATH, "wb") as fp:
             fp.write(contents)
 
         background_tasks.add_task(predict_using_pycaret, request = request, docid=docid, sid = sid, session = session, files=file)
@@ -143,7 +142,7 @@ def predict_using_pycaret(request, docid, sid, session, files):
     pageList : list = []
     ispid: str = 'F'
 
-    file_path = UPLOAD_DIRECTORY + files.filename
+    file_path = os.path.join(UPLOAD_DIRECTORY, files.filename)
     file = loadFileManager(file_path)
     
     if not file.data:

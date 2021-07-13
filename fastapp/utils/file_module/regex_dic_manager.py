@@ -3,8 +3,8 @@ import time
 
 # import os
 # print(os.path.abspath(os.path.dirname(__file__)))
-from Scripts.fastapp.common.regex_config import RegexConfigs
-from Scripts.fastapp.common.consts import REGEX_FOLDER_PATH, ADDRESS_UmMyunDong, ADDRESS_SiGunGu, ADDRESS_RoGil
+from common.regex_config import RegexConfigs
+from common.consts import REGEX_FOLDER_PATH, ADDRESS_UmMyunDong, ADDRESS_SiGunGu, ADDRESS_RoGil
 
 class regexDictionaryManager(RegexConfigs):
     def __init__(self):

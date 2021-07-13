@@ -7,14 +7,14 @@ from sqlalchemy.orm import Session
 from starlette.requests import Request
 
 # from Scripts.fastapp.common.consts import UPLOAD_DIRECTORY, USING_MODEL_PATH
-from Scripts.fastapp.database.conn import db
-from Scripts.fastapp.database.schema import Train, Files
-from Scripts.fastapp import models as m
-from Scripts.fastapp.errors import exceptions as ex
+from database.conn import db
+from database.schema import Train, Files
+import models as m
+from errors import exceptions as ex
 from inspect import currentframe as frame
 
-# from Scripts.fastapp.utils.ml.h2o_helper import H2oClass
-from Scripts.fastapp.utils.ml.preprocess_train import preprocess
+# from utils.ml.h2o_helper import H2oClass
+from utils.ml.preprocess_train import preprocess
 from ast import literal_eval
 
 import os

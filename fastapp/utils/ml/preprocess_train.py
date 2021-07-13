@@ -1,6 +1,6 @@
 import pandas as pd
-from Scripts.fastapp.common.consts import XEDM_URL, ML_MODEL_PATH
-from Scripts.fastapp.common.config import get_logger
+from common.consts import XEDM_URL, ML_MODEL_PATH
+from common.config import get_logger
 
 import requests
 import json

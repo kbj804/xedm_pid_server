@@ -8,12 +8,12 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.cors import CORSMiddleware
 
 
-from Scripts.fastapp.database.conn import db
-from Scripts.fastapp.common.config import conf
-from Scripts.fastapp.middlewares.token_validator import access_control
-from Scripts.fastapp.middlewares.trusted_hosts import TrustedHostMiddleware
+from database.conn import db
+from common.config import conf
+from middlewares.token_validator import access_control
+from middlewares.trusted_hosts import TrustedHostMiddleware
 
-from Scripts.fastapp.routes import pid, ml, xedm
+from routes import pid, ml, xedm
 
 def create_app():
     """

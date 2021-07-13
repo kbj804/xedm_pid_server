@@ -12,7 +12,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import Session, relationship
 from sqlalchemy.sql.expression import null
 
-from Scripts.fastapp.database.conn import Base, db
+from database.conn import Base, db
 # from common.consts import SUPPORT_EXT
 
 

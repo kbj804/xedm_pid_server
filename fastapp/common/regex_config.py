@@ -1,5 +1,5 @@
 import re
-from Scripts.fastapp.common.consts import ADDRESS_UmMyunDong, ADDRESS_SiGunGu, ADDRESS_RoGil
+from common.consts import ADDRESS_UmMyunDong, ADDRESS_SiGunGu, ADDRESS_RoGil
 
 class RegexConfigs:
 

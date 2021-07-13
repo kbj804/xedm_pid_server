@@ -1,9 +1,9 @@
 import pandas as pd
 
-from Scripts.fastapp.common.consts import KEYWORD_DICTIONARY_PATH, DEFAULT_CSV_PATH
-from Scripts.fastapp.utils.file_module.regex_dic_manager import regexDictionaryManager
-from Scripts.fastapp.utils.file_module.keyword_extract import KeywordExtract
-from Scripts.fastapp.utils.file_module.load_file_manager import loadFileManager
+from common.consts import KEYWORD_DICTIONARY_PATH, DEFAULT_CSV_PATH
+from utils.file_module.regex_dic_manager import regexDictionaryManager
+from utils.file_module.keyword_extract import KeywordExtract
+from utils.file_module.load_file_manager import loadFileManager
 
 class GenerateData:
     def __init__(self) -> None:
