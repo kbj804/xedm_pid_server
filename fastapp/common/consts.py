@@ -17,7 +17,7 @@ def get_logger():
 
     # 로그 포멧 정의
     formatter = logging.Formatter(
-        '%(asctime)s [%(levelname)s] # %(message)s >> @@file::%(filename)s @@line::%(lineno)s')
+        '%(asctime)s [%(levelname)s] # %(message)s >> [ file::%(filename)s | @@line::%(lineno)s ]')
 
     # 스트림 핸들러 정의
     stream_handler = logging.StreamHandler()
@@ -101,12 +101,13 @@ xedm = cc.get_map("xedm")
 X_URL = xedm['ADD']
 X_PORT = xedm['PORT']
 XEDM_URL = f'{X_URL}:{X_PORT}'
+logger.info(f'[ XEDM URL: {XEDM_URL} ]')
 
 # uvicorn Server setting
 app = cc.get_map("server")
 APP_HOST_ADD=app['HOST']
 APP_PORT=app['PORT']
-
+logger.info(f'[ AI SERVER INFO: {APP_HOST_ADD}:{APP_PORT} ]')
 
 # DB Setting
 db = cc.get_map("db")
@@ -115,6 +116,7 @@ DB_PW = db['PW']
 DB_ADD = db['ADD']
 DB_PORT = db['PORT']
 DB_NAME = db['NAME']
+logger.info(f'[ DB INFO : postgresql://{DB_USER}:{DB_PW}@{DB_ADD}:{DB_PORT}/{DB_NAME} ]')
 
 # support EXT
 SUPPORT_EXT = ['pdf','pptx','docx','csv','xlsx','txt','json','xml']

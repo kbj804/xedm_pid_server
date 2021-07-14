@@ -9,6 +9,10 @@ from fastapi.logger import logger
 
 logger.setLevel(logging.INFO)
 
+# for saving backend Log(FastAPI)
+file_handler = logging.FileHandler('my_back.log')
+logger.addHandler(file_handler)
+
 # respense: Json, error: 아까 만든 객체
 async def api_logger(request: Request, response=None, error=None):
     time_format = "%Y/%m/%d %H:%M:%S"

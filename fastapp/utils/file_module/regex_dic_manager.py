@@ -73,7 +73,6 @@ class regexDictionaryManager(RegexConfigs):
             sub_count=0
             # ADDRESS Regex
             for regex in self.origin_Dictionary[keys[i]].findall(data):
-                print(regex)
                 if i >= 15 and i <= 16:
                     """ADDRESS Regex
                     ADDRESS_RoGil, ADDRESS_SiGunGu, ADDRESS_UmMyunDong,
