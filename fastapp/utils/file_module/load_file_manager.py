@@ -22,8 +22,8 @@ from pdfminer.high_level import extract_pages
 from pdfminer.layout import LTTextContainer
 import  json
 
-from common.config import get_logger
-from common.consts import SAMPLE_FOLDER_PATH, UPLOAD_DIRECTORY
+
+from common.consts import get_logger, SAMPLE_FOLDER_PATH, UPLOAD_DIRECTORY
 
 logger = get_logger()
 

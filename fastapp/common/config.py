@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from os import path, environ
-import logging
+# import logging
 from common.consts import DB_USER, DB_PW, DB_ADD, DB_PORT, DB_NAME
 base_dir = path.dirname(path.abspath(__file__))
-print(base_dir)
+print(f'BASE_DIR : {base_dir}')
 # dataclass 데코레이터 이유: 해당 클래스를 Dict 형태로 추출해서 사용 가능
 @dataclass
 class Config:
@@ -59,26 +59,33 @@ def conf():
 
 # print(asdict(LocalConfig()))
 
-def get_logger():
-    """로거 인스턴스 반환
-    """
+# def get_logger():
+#     """로거 인스턴스 반환
+#     """
 
-    __logger = logging.getLogger('logger')
+#     __logger = logging.getLogger('logger')
 
-    # 로그 포멧 정의
-    formatter = logging.Formatter(
-        'BATCH##AWSBATCH##%(levelname)s##%(asctime)s##%(message)s >> @@file::%(filename)s@@line::%(lineno)s')
-    # 스트림 핸들러 정의
-    stream_handler = logging.StreamHandler()
-    # 각 핸들러에 포멧 지정
-    stream_handler.setFormatter(formatter)
-    # 로거 인스턴스에 핸들러 삽입
-    __logger.addHandler(stream_handler)
-    # 로그 레벨 정의
-    __logger.setLevel(logging.DEBUG)
+#     # Check handler exists
+#     if len(__logger.handlers) > 0:
+#         return __logger # Logger already exists
+#     # 로그 레벨 정의
+#     __logger.setLevel(logging.DEBUG)
 
-    file_handler = logging.FileHandler('my.log')
-    file_handler.setFormatter(formatter)
-    __logger.addHandler(file_handler)
+#     # 로그 포멧 정의
+#     formatter = logging.Formatter(
+#         '%(asctime)s [%(levelname)s] # %(message)s >> @@file::%(filename)s @@line::%(lineno)s')
 
-    return __logger
+#     # 스트림 핸들러 정의
+#     stream_handler = logging.StreamHandler()
+#     # stream_handler.setLevel(logging.DEBUG)
+#     # 각 핸들러에 포멧 지정
+#     stream_handler.setFormatter(formatter)
+#     # 로거 인스턴스에 핸들러 삽입
+#     __logger.addHandler(stream_handler)
+
+#     # 파일 핸들러
+#     file_handler = logging.FileHandler('my.log')
+#     file_handler.setFormatter(formatter)
+#     __logger.addHandler(file_handler)
+
+#     return __logger

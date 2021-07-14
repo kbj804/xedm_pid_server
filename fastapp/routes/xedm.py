@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, FastAPI, File, UploadFile, BackgroundTas
 from sqlalchemy.orm import Session
 from starlette.requests import Request
 
-from common.consts import UPLOAD_DIRECTORY, ML_MODEL_PATH
+from common.consts import get_logger, UPLOAD_DIRECTORY, ML_MODEL_PATH
 from database.conn import db
 from database.schema import Train, Files
 import models as m
@@ -17,7 +17,6 @@ from utils.preprocess_reg import preprocess_reg
 
 from utils.ml.preprocess_train import preprocess, xedm_post, connect_session, pycaret_pred
 
-from common.config import get_logger
 
 import json
 from collections import OrderedDict
@@ -59,7 +58,7 @@ async def upload_files_read_test(request: Request, background_tasks: BackgroundT
         with open(FILE_PATH, "wb") as fp:
             fp.write(contents)
         
-        f = loadFileManager(UPLOAD_DIRECTORY + file.filename)
+        f = loadFileManager(FILE_PATH)
     
     return f.data
 # @router.get('/loadml')

@@ -1,6 +1,40 @@
 import os
-from konfig import Config
+import konfig as konf
 import platform
+import logging
+
+def get_logger():
+    """로거 인스턴스 반환
+    """
+
+    __logger = logging.getLogger('logger')
+
+    # Check handler exists
+    if len(__logger.handlers) > 0:
+        return __logger # Logger already exists
+    # 로그 레벨 정의
+    __logger.setLevel(logging.DEBUG)
+
+    # 로그 포멧 정의
+    formatter = logging.Formatter(
+        '%(asctime)s [%(levelname)s] # %(message)s >> @@file::%(filename)s @@line::%(lineno)s')
+
+    # 스트림 핸들러 정의
+    stream_handler = logging.StreamHandler()
+    # stream_handler.setLevel(logging.DEBUG)
+    # 각 핸들러에 포멧 지정
+    stream_handler.setFormatter(formatter)
+    # 로거 인스턴스에 핸들러 삽입
+    __logger.addHandler(stream_handler)
+
+    # 파일 핸들러
+    file_handler = logging.FileHandler('my.log')
+    file_handler.setFormatter(formatter)
+    __logger.addHandler(file_handler)
+
+    return __logger
+
+logger = get_logger()
 
 JWT_SECRET = "ABCD1234!"
 JWT_ALGORITHM = "HS256"
@@ -10,11 +44,10 @@ MAX_API_KEY = 3
 MAX_API_WHITELIST = 10
 
 CURRENT_OS = platform.system() # mac: Darwin
-print(f"CURRENT_OS is {CURRENT_OS}")
-
+logger.info(f"CURRENT_OS is {CURRENT_OS}")
 # Folder Path
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # fastapp/
-print(f'BASE_PATH : {BASE_DIR}')
+logger.info(f'BASE_PATH : {BASE_DIR}')
 
 # Common Path
 COMMON_PATH = os.path.join(BASE_DIR, 'common')
@@ -30,8 +63,8 @@ ADDRESS_UmMyunDong = os.path.join(ADDRESS_PATH, 'umyundong.txt')
 
 # Config Path
 _CONFIG_PATH = os.path.join(COMMON_PATH, 'conf.ini')
-print(f'CONFIG_PATH : {_CONFIG_PATH}')
-cc = Config(_CONFIG_PATH)
+logger.info(f'CONFIG_PATH : {_CONFIG_PATH}')
+cc = konf.Config(_CONFIG_PATH)
 
 
 
@@ -42,10 +75,9 @@ if CURRENT_OS == 'Linux': # 'Windows', 'MacOS'
     UPLOAD_DIRECTORY = storage['STORAGE']
     if not os.path.exists(UPLOAD_DIRECTORY):
         os.mkdir(UPLOAD_DIRECTORY)
-        print("Directory " , UPLOAD_DIRECTORY ,  " Created ")
+        logger.info(f"Directory {UPLOAD_DIRECTORY} Created ")
     else:
-        print("Directory " , UPLOAD_DIRECTORY ,  " already exists")
-
+        logger.info(f"Directory {UPLOAD_DIRECTORY} already exists")
 
 
 DATA_FOLDER_PATH = os.path.join(BASE_DIR, 'data')

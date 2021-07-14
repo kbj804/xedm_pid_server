@@ -1,6 +1,5 @@
 import pandas as pd
-from common.consts import XEDM_URL, ML_MODEL_PATH
-from common.config import get_logger
+from common.consts import get_logger, XEDM_URL, ML_MODEL_PATH
 
 import requests
 import json
