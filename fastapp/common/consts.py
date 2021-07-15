@@ -1,38 +1,7 @@
 import os
 import konfig as konf
 import platform
-import logging
-
-def get_logger():
-    """로거 인스턴스 반환
-    """
-
-    __logger = logging.getLogger('logger')
-
-    # Check handler exists
-    if len(__logger.handlers) > 0:
-        return __logger # Logger already exists
-    # 로그 레벨 정의
-    __logger.setLevel(logging.DEBUG)
-
-    # 로그 포멧 정의
-    formatter = logging.Formatter(
-        '%(asctime)s [%(levelname)s] # %(message)s >> [ file::%(filename)s | @@line::%(lineno)s ]')
-
-    # 스트림 핸들러 정의
-    stream_handler = logging.StreamHandler()
-    # stream_handler.setLevel(logging.DEBUG)
-    # 각 핸들러에 포멧 지정
-    stream_handler.setFormatter(formatter)
-    # 로거 인스턴스에 핸들러 삽입
-    __logger.addHandler(stream_handler)
-
-    # 파일 핸들러
-    file_handler = logging.FileHandler('my.log')
-    file_handler.setFormatter(formatter)
-    __logger.addHandler(file_handler)
-
-    return __logger
+from utils.logger_handler import get_logger
 
 logger = get_logger()
 
@@ -66,7 +35,16 @@ _CONFIG_PATH = os.path.join(COMMON_PATH, 'conf.ini')
 logger.info(f'CONFIG_PATH : {_CONFIG_PATH}')
 cc = konf.Config(_CONFIG_PATH)
 
+# Data Path
+DATA_FOLDER_PATH = os.path.join(BASE_DIR, 'data')
+SAMPLE_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'samples')
 
+# Log Path
+LOG_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'logs')
+
+RESULT_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'results')
+TRAIN_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'train')
+REGEX_FOLDER_PATH = os.path.join(RESULT_FOLDER_PATH, 'regex')
 
 if CURRENT_OS == 'Linux': # 'Windows', 'MacOS'
     """Upload File Directory
@@ -77,16 +55,10 @@ if CURRENT_OS == 'Linux': # 'Windows', 'MacOS'
         os.mkdir(UPLOAD_DIRECTORY)
         logger.info(f"Directory {UPLOAD_DIRECTORY} Created ")
     else:
-        logger.info(f"Directory {UPLOAD_DIRECTORY} already exists")
+        logger.info(f"Directory {UPLOAD_DIRECTORY} already exist ")
+else:
+    UPLOAD_DIRECTORY = os.path.join(RESULT_FOLDER_PATH, 'uploadfiles')
 
-
-DATA_FOLDER_PATH = os.path.join(BASE_DIR, 'data')
-SAMPLE_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'samples')
-TRAIN_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'train')
-
-RESULT_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'results')
-REGEX_FOLDER_PATH = os.path.join(RESULT_FOLDER_PATH, 'regex')
-UPLOAD_DIRECTORY = os.path.join(RESULT_FOLDER_PATH, 'uploadfiles')
 
 # PyCaret Model Path
 ML_MODEL_FOLDER_PATH = os.path.join(RESULT_FOLDER_PATH, 'ml_model')

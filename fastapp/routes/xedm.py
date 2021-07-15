@@ -5,7 +5,8 @@ from fastapi import APIRouter, Depends, FastAPI, File, UploadFile, BackgroundTas
 from sqlalchemy.orm import Session
 from starlette.requests import Request
 
-from common.consts import get_logger, UPLOAD_DIRECTORY, ML_MODEL_PATH
+from common.consts import UPLOAD_DIRECTORY, ML_MODEL_PATH
+
 from database.conn import db
 from database.schema import Train, Files
 import models as m
@@ -14,7 +15,7 @@ from inspect import currentframe as frame
 
 from utils.file_module.load_file_manager import loadFileManager
 from utils.preprocess_reg import preprocess_reg
-
+from utils.logger_handler import get_logger
 from utils.ml.preprocess_train import preprocess, xedm_post, connect_session, pycaret_pred
 
 

@@ -17,7 +17,8 @@ from fastapi.security import APIKeyHeader
 # from Scripts.fastapp.middlewares.token_validator import access_control
 # from Scripts.fastapp.middlewares.trusted_hosts import TrustedHostMiddleware
 from sub_main import create_app
-from common.consts import get_logger, APP_HOST_ADD, APP_PORT
+from common.consts import APP_HOST_ADD, APP_PORT
+from utils.logger_handler import get_logger
 # from Scripts.fastapp.routes import pid, ml, xedm
 
 logger = get_logger()

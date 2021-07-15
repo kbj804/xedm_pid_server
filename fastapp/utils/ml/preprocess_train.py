@@ -1,5 +1,6 @@
 import pandas as pd
-from common.consts import get_logger, XEDM_URL, ML_MODEL_PATH
+from common.consts import XEDM_URL, ML_MODEL_PATH
+from utils.logger_handler import get_logger
 
 import requests
 import json
@@ -30,22 +31,26 @@ def preprocess(results:list):
 
 
 def xedm_post(data, sid):
-    print("####### PUSH PUSH POST ######")
+    """send PID Result to XEDM Server
+    """
     # url = f"http://183.111.96.15:7086/xedrm/json/updateDocEx?sid={sid}"
     url = f"http://{XEDM_URL}/xedrm/json/updateDocEx?sid={sid}"
+    logger.info(f"####### POST XEDM SERVER ({url})######")
     jsondata = json.dumps(data, indent=4)
     # logger.info(jsondata)
     headers = {'Content-Type': 'application/json;'}
     res = requests.post(url, headers= headers, data = jsondata, timeout=10 )
-    logger.info(res)
+    
+    # response 결과
+    logger.info(f'XEDM RESPONSE => {res}')
     print(res)
     print(jsondata)
-    print("####### PUSH DONE ######")
+    logger.info("####### PUSH DONE ######")
     return res
 
 def connect_session():
     print("####### Connection Xedm Session ######")
-    url = 'http://{XEDM_URL}/xedrm/json/login?isAgent=True&lang=ko&userId=Qmhp/4rwH78=&mode=jwt'
+    url = f'http://{XEDM_URL}/xedrm/json/login?isAgent=True&lang=ko&userId=Qmhp/4rwH78=&mode=jwt'
 
     res = requests.get(url)
     res = json.loads(res.text)
@@ -54,6 +59,8 @@ def connect_session():
     return session
 
 def pycaret_pred(data):
+    """ Auto ML - Pycaret 동작
+    """
     saved_model = load_model(ML_MODEL_PATH)
     pred = predict_model(saved_model, data=data)
 

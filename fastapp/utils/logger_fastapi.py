@@ -1,3 +1,4 @@
+import os
 import json
 import logging
 from datetime import timedelta, datetime
@@ -7,10 +8,15 @@ from fastapi.requests import Request
 from fastapi import Body
 from fastapi.logger import logger
 
+# log's folder setting
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LOGS_PATH = os.path.join(BASE_DIR, 'logs')
+
 logger.setLevel(logging.INFO)
 
 # for saving backend Log(FastAPI)
-file_handler = logging.FileHandler('my_back.log')
+LOG_API = os.path.join(LOGS_PATH, 'my_back.log')
+file_handler = logging.FileHandler(LOG_API)
 logger.addHandler(file_handler)
 
 # respense: Json, error: 아까 만든 객체

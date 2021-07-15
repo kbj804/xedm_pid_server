@@ -23,7 +23,8 @@ from pdfminer.layout import LTTextContainer
 import  json
 
 
-from common.consts import get_logger, SAMPLE_FOLDER_PATH, UPLOAD_DIRECTORY
+from common.consts import SAMPLE_FOLDER_PATH, UPLOAD_DIRECTORY
+from utils.logger_handler import get_logger
 
 logger = get_logger()
 

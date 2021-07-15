@@ -29,7 +29,7 @@ from errors.exceptions import APIException, SqlFailureEx, APIQueryStringEx
 
 
 from utils.date_utils import D
-from utils.logger import api_logger
+from utils.logger_fastapi import api_logger
 from utils.query_utils import to_dict
 
 
