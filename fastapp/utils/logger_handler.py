@@ -1,8 +1,6 @@
 import os
 import logging
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# print("WARNING ", BASE_DIR)
-LOGS_PATH = os.path.join(BASE_DIR, 'logs')
 
 def get_logger():
     """로거 인스턴스 반환
@@ -27,8 +25,17 @@ def get_logger():
     # 로거 인스턴스에 핸들러 삽입
     __logger.addHandler(stream_handler)
 
+    
+    # Log Path
+    LOG_FOLDER_PATH = os.path.join(BASE_DIR, 'logs')
+    if not os.path.exists(LOG_FOLDER_PATH):
+        os.mkdir(LOG_FOLDER_PATH)
+        print(f"Directory {LOG_FOLDER_PATH} Created ")
+
     # 파일 핸들러
-    LOG_HANDLER = os.path.join(LOGS_PATH, 'handler.log')
+    LOG_HANDLER = os.path.join(LOG_FOLDER_PATH, 'handler.log')
+
+
     file_handler = logging.FileHandler(LOG_HANDLER)
     file_handler.setFormatter(formatter)
     __logger.addHandler(file_handler)

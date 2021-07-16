@@ -16,7 +16,7 @@ CURRENT_OS = platform.system() # mac: Darwin
 logger.info(f"CURRENT_OS is {CURRENT_OS}")
 # Folder Path
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # fastapp/
-logger.info(f'BASE_PATH : {BASE_DIR}')
+logger.info(f'consts.py - BASE_PATH : {BASE_DIR}')
 
 # Common Path
 COMMON_PATH = os.path.join(BASE_DIR, 'common')
@@ -39,8 +39,14 @@ cc = konf.Config(_CONFIG_PATH)
 DATA_FOLDER_PATH = os.path.join(BASE_DIR, 'data')
 SAMPLE_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'samples')
 
-# Log Path
-LOG_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'logs')
+# # Log Path
+# LOG_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'logs')
+# if not os.path.exists(LOG_FOLDER_PATH):
+#     os.mkdir(LOG_FOLDER_PATH)
+#     logger.info(f"Directory {LOG_FOLDER_PATH} Created ")
+# else:
+#     logger.info(f"Directory {LOG_FOLDER_PATH} already exist ")
+
 
 RESULT_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'results')
 TRAIN_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'train')

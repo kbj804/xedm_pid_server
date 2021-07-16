@@ -8,9 +8,15 @@ from fastapi.requests import Request
 from fastapi import Body
 from fastapi.logger import logger
 
+
 # log's folder setting
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOGS_PATH = os.path.join(BASE_DIR, 'logs')
+
+# Log Path
+if not os.path.exists(LOGS_PATH):
+    os.mkdir(LOGS_PATH)
+    print(f"Directory {LOGS_PATH} Created ")
 
 logger.setLevel(logging.INFO)
 
