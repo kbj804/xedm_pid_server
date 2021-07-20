@@ -22,8 +22,19 @@ logger.setLevel(logging.INFO)
 
 # for saving backend Log(FastAPI)
 LOG_API = os.path.join(LOGS_PATH, 'my_back.log')
-file_handler = logging.FileHandler(LOG_API)
-logger.addHandler(file_handler)
+# file_handler = logging.FileHandler(LOG_API)
+# logger.addHandler(file_handler)
+
+# RotatingFileHandler
+log_max_size = 10 * 1024 * 1024  ## 10MB
+log_file_count = 10
+rotatingFileHandler = logging.handlers.RotatingFileHandler(
+    filename=LOG_API,
+    maxBytes=log_max_size,
+    backupCount=log_file_count,
+    encoding='utf-8'
+)
+logger.addHandler(rotatingFileHandler)
 
 # respense: Json, error: 아까 만든 객체
 async def api_logger(request: Request, response=None, error=None):

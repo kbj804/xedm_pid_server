@@ -35,9 +35,20 @@ def get_logger():
     # 파일 핸들러
     LOG_HANDLER = os.path.join(LOG_FOLDER_PATH, 'handler.log')
 
+    # file_handler = logging.FileHandler(LOG_HANDLER)
+    # file_handler.setFormatter(formatter)
+    # __logger.addHandler(file_handler)
 
-    file_handler = logging.FileHandler(LOG_HANDLER)
-    file_handler.setFormatter(formatter)
-    __logger.addHandler(file_handler)
+    # RotatingFileHandler
+    log_max_size = 10 * 1024 * 1024  ## 10MB
+    log_file_count = 10
+    rotatingFileHandler = logging.handlers.RotatingFileHandler(
+        filename=LOG_HANDLER,
+        maxBytes=log_max_size,
+        backupCount=log_file_count,
+        encoding='utf-8'
+    )
+    rotatingFileHandler.setFormatter(formatter)
+    __logger.addHandler(rotatingFileHandler)
 
     return __logger
