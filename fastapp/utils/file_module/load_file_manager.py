@@ -25,6 +25,7 @@ import  json
 
 from common.consts import SAMPLE_FOLDER_PATH, UPLOAD_DIRECTORY
 from utils.logger_handler import get_logger
+from utils.file_module.pdf_layout_scanner import with_pdf, parse_lt_objs
 
 logger = get_logger()
 
