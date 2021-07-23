@@ -28,7 +28,10 @@ ADDRESS_RoGil = os.path.join(ADDRESS_PATH, 'rogil.txt')
 ADDRESS_SiGunGu = os.path.join(ADDRESS_PATH, 'sigungu.txt')
 ADDRESS_UmMyunDong = os.path.join(ADDRESS_PATH, 'umyundong.txt')
 
-
+# Image preprocessing Path
+UTILS_PATH = os.path.join(BASE_DIR, 'utils')
+FILE_MOUDULE_PATH = os.path.join(UTILS_PATH, 'file_module')
+IMG_OUTPUT_PATH = os.path.join(FILE_MOUDULE_PATH, 'img_output')
 
 # Config Path
 _CONFIG_PATH = os.path.join(COMMON_PATH, 'conf.ini')

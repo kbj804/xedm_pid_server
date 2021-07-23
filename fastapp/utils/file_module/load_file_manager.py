@@ -23,9 +23,9 @@ from pdfminer.layout import LTTextContainer
 import  json
 
 
-from common.consts import SAMPLE_FOLDER_PATH, UPLOAD_DIRECTORY
+from common.consts import SAMPLE_FOLDER_PATH, UPLOAD_DIRECTORY, IMG_OUTPUT_PATH
 from utils.logger_handler import get_logger
-from utils.file_module.pdf_layout_scanner import with_pdf, parse_lt_objs
+from utils.file_module.pdf_layout_scanner import get_pages
 
 logger = get_logger()
 
@@ -345,6 +345,42 @@ class loadFileManager:
         result.append({"page":0,  "td": data})
 
         return result
+
+    def read_pdf_for_image_extract(self):
+        """OCR 기능 연동을 위한 이미지 추출 모듈"""
+        # pip install pymuPDF pillow
+        import fitz
+        import io
+        import os
+        from PIL import Image
+
+        with fitz.open(self.path) as pdf_file :
+
+            # iterate over PDF pages
+            for page_index in range(len(pdf_file)):
+                # get the page itself
+                page = pdf_file[page_index]
+                image_list = page.getImageList()
+                # printing number of images found in this page
+                if image_list:
+                    print(f"[+] Found a total of {len(image_list)} images in page {page_index}")
+                else:
+                    print("[!] No images found on page", page_index)
+                for image_index, img in enumerate(page.getImageList(), start=1):
+                    # get the XREF of the image
+                    xref = img[0]
+                    # extract the image bytes
+                    base_image = pdf_file.extractImage(xref)
+                    image_bytes = base_image["image"]
+                    # get the image extension
+                    image_ext = base_image["ext"]
+                    # load it to PIL
+                    image = Image.open(io.BytesIO(image_bytes))
+                    # save it to local disk
+                    IMG_PATH = os.path.join(IMG_OUTPUT_PATH, f"image{page_index+1}_{image_index}.{image_ext}")
+                    image.save(open(IMG_PATH, "wb"))
+            
+            # TODO: 추출 후 OCR 처리과정 후에 이미지 삭제 하는 작업 필요
 
 
     read_function = {
