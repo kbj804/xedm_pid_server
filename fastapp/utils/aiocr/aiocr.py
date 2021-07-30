@@ -8,8 +8,8 @@ import pytesseract
 import re
 from scipy import stats
 import argparse
-import file_utils
-import imgproc
+from utils.aiocr.file_utils import get_files
+import utils.aiocr.imgproc
 import time
 import json
 from tqdm import tqdm
@@ -17,7 +17,7 @@ from tqdm import tqdm
 class aiocr():
     def __init__(self, path_in='./input'):
         self.path_in = path_in
-        self.image_list, _, _ = file_utils.get_files(self.path_in)        
+        self.image_list, _, _ = get_files(self.path_in)        
         self.start = time.time()
         self.record = pd.DataFrame(columns=['src','id','pg','cdnt','y','x','h','w','shp_h','shp_w','cntNotBlack','cntBlack','percnt','mtd','txt'])
         self.rslt = []

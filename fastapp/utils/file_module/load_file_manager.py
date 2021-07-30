@@ -382,7 +382,7 @@ class loadFileManager:
             
     def clear_img_folder(self):
         """clear img extraction output folder"""
-        file_list = os.listdir(IMG_OUTPUT_PATH)
+        file_list = os.listdir(IMG_OUTPUT_PATH) 
         for file in file_list:
             RM_PATH = os.path.join(IMG_OUTPUT_PATH, file)
             os.remove(RM_PATH)

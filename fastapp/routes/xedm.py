@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, FastAPI, File, UploadFile, BackgroundTas
 from sqlalchemy.orm import Session
 from starlette.requests import Request
 
-from common.consts import UPLOAD_DIRECTORY, ML_MODEL_PATH
+from common.consts import UPLOAD_DIRECTORY, ML_MODEL_PATH, IMG_OUTPUT_PATH
 
 from database.conn import db
 from database.schema import Train, Files
@@ -204,6 +204,19 @@ def predict_using_pycaret(request, docid, sid, session, files):
 
     # remove upload file
     os.remove(file_path)
+
+    @router.get("/ocrTest")
+    async def ai_ocr_test(request: Request):
+        """
+        # Test AI OCR
+        """
+        from utils.aiocr.aiocr import aiocr
+        request.state.inspect = frame()
+
+        test = aiocr(IMG_OUTPUT_PATH)
+        result = test.run()
+
+        return result
 
     # return file_data
 """def predict_using_h2o(request, docid, sid, session, file):
