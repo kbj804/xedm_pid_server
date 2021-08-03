@@ -291,6 +291,7 @@ class aiocr():
 
     def run(self):
         for i in range(len(self.image_list)):
+            print(self.image_list)
             record_dict = {}
             p_num = ''
             p_num = re.sub(r".+\|p([0-9]{1,10000})\.jpg", r"\1", self.image_list[i])

@@ -205,18 +205,18 @@ def predict_using_pycaret(request, docid, sid, session, files):
     # remove upload file
     os.remove(file_path)
 
-    @router.get("/ocrTest")
-    async def ai_ocr_test(request: Request):
-        """
-        # Test AI OCR
-        """
-        from utils.aiocr.aiocr import aiocr
-        request.state.inspect = frame()
+@router.get("/ocrTest")
+async def ai_ocr_test(request: Request):
+    """
+    # Test AI OCR
+    """
+    from utils.aiocr.aiocr import aiocr
+    request.state.inspect = frame()
 
-        test = aiocr(IMG_OUTPUT_PATH)
-        result = test.run()
+    test = aiocr(IMG_OUTPUT_PATH)
+    result = test.run()
 
-        return result
+    return result
 
     # return file_data
 """def predict_using_h2o(request, docid, sid, session, file):

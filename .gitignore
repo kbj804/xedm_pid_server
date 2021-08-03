@@ -31,6 +31,7 @@ MANIFEST
 *.ps1
 
 *.jpg
+*.png
 
 # jupyter
 *.exe

@@ -89,6 +89,7 @@ class loadFileManager:
                 if isinstance(element, LTTextContainer):
                     page_contents += element.get_text()
             result.append({"page":i, "td":page_contents})
+        self.read_pdf_for_image_extract()
         
         return result
         
@@ -379,6 +380,7 @@ class loadFileManager:
                     # save it to local disk
                     IMG_PATH = os.path.join(IMG_OUTPUT_PATH, f"image{page_index+1}_{image_index}.{image_ext}")
                     image.save(open(IMG_PATH, "wb"))
+        self.clear_img_folder()
             
     def clear_img_folder(self):
         """clear img extraction output folder"""
