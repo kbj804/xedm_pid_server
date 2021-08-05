@@ -178,12 +178,18 @@ class aiocr():
                     
                 if x+w > max_col-10:
                     w = w+min_col_itr+itr+pad            
-                        
-                sub_img = cv2.Laplacian(gray_scale[y:y+h, x:x+w], cv2.CV_8U, ksize=5)
-                
+
+                # 수정한 부분
+                # sub_img = cv2.Laplacian(gray_scale[y:y+h, x:x+w], cv2.CV_8U, ksize=5)
+
                 if gray_scale[y:y+h, x:x+w].shape[0] == 0:
                     pass
+
                 else:
+                    # FastAPI 서버에서 Laplacian 할때, x의 shpae가 0인 경우에 문제가 생김.
+                    # 일반적으로 kernel에서 실행하면 정상적이지만.. 내부적으로 에러 처리가 되어있는 듯 함 
+                    sub_img = cv2.Laplacian(gray_scale[y:y+h, x:x+w], cv2.CV_8U, ksize=5)
+                    
                     if test == 'y':
                         print(sub_img.shape)
                     eroded = cv2.morphologyEx(sub_img, cv2.MORPH_OPEN, kernal_h)
@@ -289,7 +295,7 @@ class aiocr():
         
         return record, text, table_yn
 
-    def run(self):
+    def run(self): # 이미지 리스트 받아오는거 자체를 변경
         for i in range(len(self.image_list)):
             print(self.image_list)
             record_dict = {}
