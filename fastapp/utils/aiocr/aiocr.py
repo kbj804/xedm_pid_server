@@ -13,6 +13,7 @@ import utils.aiocr.imgproc
 import time
 import json
 from tqdm import tqdm
+from common.consts import IMG_OUTPUT_PATH
 
 class aiocr():
     def __init__(self, path_in='./input'):
@@ -189,7 +190,7 @@ class aiocr():
                     # FastAPI 서버에서 Laplacian 할때, x의 shpae가 0인 경우에 문제가 생김.
                     # 일반적으로 kernel에서 실행하면 정상적이지만.. 내부적으로 에러 처리가 되어있는 듯 함 
                     sub_img = cv2.Laplacian(gray_scale[y:y+h, x:x+w], cv2.CV_8U, ksize=5)
-                    
+
                     if test == 'y':
                         print(sub_img.shape)
                     eroded = cv2.morphologyEx(sub_img, cv2.MORPH_OPEN, kernal_h)
@@ -296,18 +297,32 @@ class aiocr():
         return record, text, table_yn
 
     def run(self): # 이미지 리스트 받아오는거 자체를 변경
-        for i in range(len(self.image_list)):
-            print(self.image_list)
+        img_list = os.listdir(IMG_OUTPUT_PATH)
+        for i in range(len(img_list)):
+            img_path = os.path.join(IMG_OUTPUT_PATH, img_list[i])
             record_dict = {}
             p_num = ''
-            p_num = re.sub(r".+\|p([0-9]{1,10000})\.jpg", r"\1", self.image_list[i])
+            p_num = i + 1
             
-            if len(p_num) == len(self.image_list[i]):
-                p_num = '1'
+            print(f'page number : {p_num}')
+            print('> Start :', img_path)
+            self.record, text, table_yn = self.t2t(path_= img_path, record=self.record, test='n', p_num=p_num, plan=3)
+            print('< Complete :', img_path)
 
-            print('> Start :', self.image_list[i])
-            self.record, text, table_yn = self.t2t(path_=self.image_list[i], record=self.record, test='n', p_num=p_num, plan=3)
-            print('< Complete :', self.image_list[i])
+        # CWH Source Code
+        # for i in range(len(self.image_list)):
+        #     record_dict = {}
+        #     p_num = ''
+        #     p_num = re.sub(r".+\|p([0-9]{1,10000})\.jpg", r"\1", self.image_list[i])
+            
+        #     print(f'page number : {p_num}')
+            
+        #     if len(p_num) == len(self.image_list[i]):
+        #         p_num = '1'
+
+        #     print('> Start :', self.image_list[i])
+        #     self.record, text, table_yn = self.t2t(path_=self.image_list[i], record=self.record, test='n', p_num=p_num, plan=3)
+        #     print('< Complete :', self.image_list[i])
             if table_yn == 'y':
                 record_dict['page'] = p_num
                 data = []
