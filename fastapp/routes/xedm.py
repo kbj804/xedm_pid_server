@@ -205,18 +205,80 @@ def predict_using_pycaret(request, docid, sid, session, files):
     # remove upload file
     os.remove(file_path)
 
+from utils.aiocr.aiocr import aiocr
 @router.get("/ocrTest")
-async def ai_ocr_test(request: Request):
+async def ai_ocr_test(request: Request, session: Session = Depends(db.session)):
     """
     # Test AI OCR
     """
-    from utils.aiocr.aiocr import aiocr
     request.state.inspect = frame()
 
     test = aiocr(IMG_OUTPUT_PATH)
     result = test.run()
 
-    return result
+    # start PID
+    file_data = OrderedDict()
+    pageList : list = []
+    ispid: str = 'F'
+    total_reg_count : int = 0
+    page : int = 0
+    tempList : list = []
+
+    # config for testing
+    fileid = 12345
+    docid = 12345
+
+    obj = Files.create(session, auto_commit=False, name='test', ext='pdf', ip_add= request.state.ip, doc_id=docid )
+    for p in result:
+        df = preprocess_reg(p["td"])
+
+        # page += 1
+        total_reg_count += df["reg_count"][0]
+        
+        if df["reg_count"][0] > 0:
+            pageList.append(str(page))
+            tempList.append(1)
+        else:
+            tempList.append(0)
+
+        Train.create(session, auto_commit=True, file_id = obj.id ,y=-1, page=p["page"], text_data=p["td"],
+                                                reg_count=int(df["reg_count"][0]), column1=int(df["col1"][0]), column2=int(df["col2"][0]),
+                                                column3=int(df["col3"][0]),column4=int(df["col4"][0]),column5=int(df["col5"][0]),column6=int(df["col6"][0]),
+                                                column7=int(df["col7"][0]),column8=int(df["col8"][0]),column9=int(df["col9"][0]),column10=int(df["col10"][0])
+                    )
+    
+
+    page_list = Train.filter(file_id= obj.id).order_by("page").all()
+    df = preprocess(page_list)
+
+    # 모델 안켜져 있을 경우 로드
+    # PyCaret Model Load
+    preds = pycaret_pred(df)
+
+    result_list = [str(p+1) for  p, value in enumerate(preds) if value == 1]
+    # model = load_ml_model(USING_MODEL_PATH)
+    # if result_list or total_reg_count > 0:
+    if result_list or total_reg_count > 0:
+        ispid = "T"
+
+        info = literal_eval("{'is_pid': True}") # literal_eval: str -> dict
+        ret = Files.filter(id=obj.id)
+        ret.update(auto_commit=True, **info)
+
+
+    pinfo_data = {"name":"ext:pinfo", "value": ispid }
+    pPage_data = {"name":"ext:pPage", "value": ', '.join(result_list) }
+
+    file_data["attrData"] = {"docId": docid, "attrList":[pinfo_data, pPage_data]}
+    print(file_data)
+    
+    # res = xedm_post(file_data, sid)
+    # print(res.text)
+
+    return file_data
+
+
+
 
     # return file_data
 """def predict_using_h2o(request, docid, sid, session, file):
