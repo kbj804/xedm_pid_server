@@ -1,0 +1,6 @@
+FROM postgresql
+
+RUN sudo -u postgres psql -c "alter user postgres with password '1234'"
+RUN sudo -u postgres createuser iztbj
+RUN sudo -u postgres createdb pidb -O iztbj
+RUN sudo -u postgres psql -c "alter user mlflow with password '1234'" iztbj
