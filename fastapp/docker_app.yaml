@@ -1,10 +1,14 @@
-FROM ubuntu
+FROM ubuntu:20.04
+MAINTAINER kbj80494@gmail.com
 
 # setting ENV
 ENV XEDM_DOCKER="YES" \
     XEDM_HOME=/xedm_app \
     XEDM_PYTHON_PACKAGES=/usr/local/lib/python3.6/dist-packages \
-    XEDM_WORKING_STG=/xedmstorage
+    XEDM_WORKING_STG=/xedmstorage \
+    TZ=Asia/Seoul
+
+RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone
 
 # XEDM SERVER temp Storage
 RUN mkdir -p /xedmstorage
@@ -12,32 +16,39 @@ RUN mkdir -p /xedmstorage
 # docker volume
 RUN mkdir -p /xedm_app
 
+
 # Run updates, install basics and cleanup
 # - build-essential: Compile specific dependencies
 # - git-core: Checkout git repos
-RUN apt-get update -qq \
-    && apt-get install -y --no-install-recommends build-essential git-core openssl libssl-dev libffi6 libffi-dev curl \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# RUN apt-get update -qq \
+#     && apt-get install -y --no-install-recommends build-essential git-core openssl libssl-dev libffi6 libffi-dev curl \
+#     && apt-get clean \
+#     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# WORKDIR: RUN이 실행 될 공간
-WORKDIR ${XEDM_HOME}
-
-
-# python 설치
-RUN apt install -y python3 python3-pip
+RUN apt-get update -qq
+RUN apt-get upgrade -y
+RUN apt-get install git -y
 
 # tesseract 설치
 RUN apt install -y tesseract-ocr tesseract-ocr-kor libtesseract-dev tesseract-ocr-script-hang tesseract-ocr-script-hang-vert libgl1-mesa-glx
 
+# WORKDIR: RUN이 실행 될 공간
+WORKDIR ${XEDM_HOME}
+
+RUN git clone https://github.com/kbj804/xedm_pid_server.git /xedm_app
+
+# python 설치
+RUN apt install -y python3 python3-pip
+
+
 # 개인정보 검출 python Lib 설치
-RUN pip install -y requests uvicorn fastapi sqlalchemy pyjwt bcrypt pdfminer.six python-pptx python-docx openpyxl xmltodict pandas python-multipart psycopg2-binary konfig
+RUN pip install requests uvicorn fastapi sqlalchemy pyjwt bcrypt pdfminer.six python-pptx python-docx openpyxl xmltodict pandas python-multipart psycopg2-binary konfig
 
 # Auto Machine Learning
-RUN pip install -y pycaret
+RUN pip install pycaret
 
 # OCR
-RUN pip install -y pymuPDF pillow opencv-python pytesseract scikit-image
+RUN pip install pymuPDF pillow opencv-python pytesseract scikit-image
 
 # use bash always
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
@@ -47,7 +58,10 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 # PORT Setting
 EXPOSE 8899
 
-# Container가 실시작되었을 때 실행되는 명령어
-ENTRYPOINT 
+# Container가 시작되었을 때 실행되는 명령어
+ENTRYPOINT python3 /xedm_app/fastapp/main.py
 
 
+# DOCKER Container Run Scripts
+# docker run -it -v [OS_PATH]:[DOCKER_PATH] --name [container_name] -p 8899:8899 [ImageName]
+# docker run -it -v /home/kbj/buildfile:/xedmstorage --name sTest -p 8899:8899 build_test:0.3
