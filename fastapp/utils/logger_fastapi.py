@@ -45,7 +45,8 @@ async def api_logger(request: Request, response=None, error=None):
     error_log = None
     user = request.state.user
     # body: 나중에 DEBUG용으로 사용하기 위해 넣어 둠. 어디서 에러가 났는지 알기 위해서 넣어주는게 좋음
-    body = await request.body()
+    # body = await request.body()
+    # print(body)
     # 
     if error:
         if request.state.inspect:
@@ -82,8 +83,8 @@ async def api_logger(request: Request, response=None, error=None):
         datetimeKST=(datetime.utcnow() + timedelta(hours=9)).strftime(time_format),
     )
     # For DEBUG
-    if body:
-        log_dict["body"] = body
+    # if body:
+    #     log_dict["body"] = body
     #
     if error and error.status_code >= 500:
         logger.error(json.dumps(log_dict))
