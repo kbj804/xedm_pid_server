@@ -220,7 +220,7 @@ class RegexConfigs:
 
     def load_address_db(self, data_path):
         address_dict = {}
-        with open(data_path, 'r') as f:
+        with open(data_path, 'r', encoding='cp949') as f:
             lines = f.readlines()
             for line in lines:
                 line = line.rstrip('\n')

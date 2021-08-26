@@ -253,6 +253,9 @@ async def ai_ocr_test(request: Request, session: Session = Depends(db.session)):
 
     # 모델 안켜져 있을 경우 로드
     # PyCaret Model Load
+    if df.empty:
+        raise ex.DataframeEmpty(df)
+        
     preds = pycaret_pred(df)
 
     result_list = [str(p+1) for  p, value in enumerate(preds) if value == 1]

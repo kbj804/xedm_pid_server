@@ -36,7 +36,7 @@ MANIFEST
 *.bat
 *.ps1
 
-*.jpg
+# *.jpg
 *.png
 
 # jupyter
@@ -177,4 +177,5 @@ yarn-error.log*
 *.sln
 *.sw*
 
-# 
+# temp ignore for clean up git
+alembic-script.py
