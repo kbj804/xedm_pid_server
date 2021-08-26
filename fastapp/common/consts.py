@@ -31,7 +31,14 @@ ADDRESS_UmMyunDong = os.path.join(ADDRESS_PATH, 'umyundong.txt')
 # Image preprocessing Path
 UTILS_PATH = os.path.join(BASE_DIR, 'utils')
 FILE_MOUDULE_PATH = os.path.join(UTILS_PATH, 'file_module')
+
+# Image output Dir check
 IMG_OUTPUT_PATH = os.path.join(FILE_MOUDULE_PATH, 'img_output')
+if not os.path.exists(IMG_OUTPUT_PATH):
+    os.mkdir(IMG_OUTPUT_PATH)
+    logger.info(f"Directory {IMG_OUTPUT_PATH} Created ")
+else:
+    logger.info(f"Directory {IMG_OUTPUT_PATH} already exist ")
 
 # Config Path
 _CONFIG_PATH = os.path.join(COMMON_PATH, 'conf.ini')
@@ -43,6 +50,7 @@ DATA_FOLDER_PATH = os.path.join(BASE_DIR, 'data')
 SAMPLE_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'samples')
 
 # # Log Path
+# 파일 읽어오는 순서 문제로 logger.py 자체에 넣어둠
 # LOG_FOLDER_PATH = os.path.join(DATA_FOLDER_PATH, 'logs')
 # if not os.path.exists(LOG_FOLDER_PATH):
 #     os.mkdir(LOG_FOLDER_PATH)
