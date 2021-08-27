@@ -6,10 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
-#
-*
-!*/
-!fastapp/*
+# push only 'fasapp' directory
+# *
+# !*/
+# !fastapp/*
 
 
 # Distribution / packaging
