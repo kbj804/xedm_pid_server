@@ -68,6 +68,9 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 # PORT Setting
 EXPOSE 8889
 
+# Docker가 실행된 후 계속 켜져있는 상태를 유지시키는 방법
+CMD tail -f /dev/null
+
 
 # DOCKER Container Run Scripts
 # docker run -it -v [OS_PATH]:[DOCKER_PATH] --name [container_name] -p 8899:8899 [ImageName]
