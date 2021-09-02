@@ -4,6 +4,7 @@
 # sed -i -e 's/\r$//' [파일.sh]
 # sed -i -e 's/\r$//' container_test.sh
 CURRENT_PATH=$(pwd)
+echo "Running Config file setting ..."
 read_lines()
 {
     while IFS = read -r line
@@ -11,7 +12,7 @@ read_lines()
         echo $line
     done <$1
 }
-
+echo ${PROJECT_PATH}
 eval $(read_lines) ${CURRENT_PATH}/config_for_install.txt
 # 
 # setting for dev
@@ -23,6 +24,7 @@ eval $(read_lines) ${CURRENT_PATH}/config_for_install.txt
 # 
 # docker containser start
 # sudo docker restart $CONTAINER_NAME
+echo "Docker container reset & restart ..."
 sudo docker stop ${CONTAINER_NAME}
 sudo docker rm ${CONTAINER_NAME}
 sudo docker run -d --restart always --name ${CONTAINER_NAME} -p ${AIZT_PORT}:${DOCKER_PORT} ${DOCKER_IMAGE}:${DOCKER_VERSION}
@@ -31,12 +33,13 @@ sudo docker run -d --restart always --name ${CONTAINER_NAME} -p ${AIZT_PORT}:${D
 # sudo docker exec ${CONTAINER_NAME} mkdir ${DOCKER_PATH}
 # 
 # input project source code
+echo "Downloading XEDM ML Server source code ..."
 sudo docker cp ${PROJECT_PATH} ${CONTAINER_NAME}:${DOCKER_PATH}
 # 
-# setting config file
+echo "Setting app and ml config files ..."
 sudo docker cp ${CURRENT_PATH}/${CONFIG_NAME} ${CONTAINER_NAME}:${DOCKER_PATH}/aizt/fastapp/common/${CONFIG_NAME}
 sudo docker cp ${CURRENT_PATH}/${ML_MODEL_NAME} ${CONTAINER_NAME}:${DOCKER_PATH}/aizt/fastapp/data/results/ml_model/${ML_MODEL_NAME}
 # 
 #
-# start
+echo "Starting XEDM ML Server  ..."
 sudo docker exec ${CONTAINER_NAME} python3 ${DOCKER_PATH}/aizt/fastapp/main.py
