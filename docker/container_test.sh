@@ -4,23 +4,30 @@
 # sed -i -e 's/\r$//' [파일.sh]
 # sed -i -e 's/\r$//' container_test.sh
 CURRENT_PATH=$(pwd)
+#
 echo "Running Config file setting ..."
-read_lines()
-{
-    while IFS = read -r line
-    do
-        echo $line
-    done <$1
-}
-echo ${PROJECT_PATH}
-eval $(read_lines) ${CURRENT_PATH}/config_for_install.txt
+CONFIG_FILE=${CURRENT_PATH}/conf.ini
+PROJECT_PATH=$(awk '/^\[shell]/{f=1} f==1&&/^PROJECT_PATH/{print $3;exit}' ${CONFIG_FILE})
+GIT_URL=$(awk '/^\[shell]/{f=1} f==1&&/^GIT_URL/{print $3;exit}' ${CONFIG_FILE})
+# 
+DOCKER_IMAGE=$(awk '/^\[docker]/{f=1} f==1&&/^DOCKER_IMAGE/{print $3;exit}' ${CONFIG_FILE})
+DOCKER_VERSION=$(awk '/^\[docker]/{f=1} f==1&&/^DOCKER_VERSION/{print $3;exit}' ${CONFIG_FILE})
+DOCKER_PATH=$(awk '/^\[docker]/{f=1} f==1&&/^DOCKER_PATH/{print $3;exit}' ${CONFIG_FILE})
+CONTAINER_NAME=$(awk '/^\[docker]/{f=1} f==1&&/^CONTAINER_NAME/{print $3;exit}' ${CONFIG_FILE})
+DOCKER_PORT=$(awk '/^\[docker]/{f=1} f==1&&/^DOCKER_PORT/{print $3;exit}' ${CONFIG_FILE})   # port forwarding - [server]의 PORT와 같아야함
+AIZT_PORT=$(awk '/^\[docker]/{f=1} f==1&&/^AIZT_PORT/{print $3;exit}' ${CONFIG_FILE}) 
+# 
+CONFIG_NAME=$(awk '/^\[share]/{f=1} f==1&&/^CONFIG_NAME/{print $3;exit}' ${CONFIG_FILE})
+ML_MODEL_NAME=$(awk '/^\[share]/{f=1} f==1&&/^ML_MODEL_NAME/{print $3;exit}' ${CONFIG_FILE})
+
+echo "CURRENT PROJECT PATH is ${PROJECT_PATH}"
 # 
 # setting for dev
 # sudo docker build --tag ${DOCKER_IMAGE}:${DOCKER_VERSION} .
 # 
 # init setting
-# sudo mkdir -p ${PROJECT_PATH}
-# sudo git clone ${GIT_URL} ${PROJECT_PATH}
+sudo mkdir -p ${PROJECT_PATH}
+sudo git clone ${GIT_URL} ${PROJECT_PATH}
 # 
 # docker containser start
 # sudo docker restart $CONTAINER_NAME
