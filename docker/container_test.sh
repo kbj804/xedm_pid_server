@@ -14,7 +14,7 @@ DOCKER_IMAGE=$(awk '/^\[docker]/{f=1} f==1&&/^DOCKER_IMAGE/{print $3;exit}' ${CO
 DOCKER_VERSION=$(awk '/^\[docker]/{f=1} f==1&&/^DOCKER_VERSION/{print $3;exit}' ${CONFIG_FILE})
 DOCKER_PATH=$(awk '/^\[docker]/{f=1} f==1&&/^DOCKER_PATH/{print $3;exit}' ${CONFIG_FILE})
 CONTAINER_NAME=$(awk '/^\[docker]/{f=1} f==1&&/^CONTAINER_NAME/{print $3;exit}' ${CONFIG_FILE})
-DOCKER_PORT=$(awk '/^\[docker]/{f=1} f==1&&/^DOCKER_PORT/{print $3;exit}' ${CONFIG_FILE})   # port forwarding - [server]의 PORT와 같아야함
+DOCKER_PORT=$(awk '/^\[server]/{f=1} f==1&&/^PORT/{print $3;exit}' ${CONFIG_FILE})   # port forwarding - [server]의 PORT와 같아야함
 AIZT_PORT=$(awk '/^\[docker]/{f=1} f==1&&/^AIZT_PORT/{print $3;exit}' ${CONFIG_FILE}) 
 # 
 CONFIG_NAME=$(awk '/^\[share]/{f=1} f==1&&/^CONFIG_NAME/{print $3;exit}' ${CONFIG_FILE})
@@ -47,6 +47,6 @@ echo "Setting app and ml config files ..."
 sudo docker cp ${CURRENT_PATH}/${CONFIG_NAME} ${CONTAINER_NAME}:${DOCKER_PATH}/aizt/fastapp/common/${CONFIG_NAME}
 sudo docker cp ${CURRENT_PATH}/${ML_MODEL_NAME} ${CONTAINER_NAME}:${DOCKER_PATH}/aizt/fastapp/data/results/ml_model/${ML_MODEL_NAME}
 # 
-#
+# 
 echo "Starting XEDM ML Server  ..."
 sudo docker exec ${CONTAINER_NAME} python3 ${DOCKER_PATH}/aizt/fastapp/main.py
