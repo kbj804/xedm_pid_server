@@ -11,10 +11,12 @@ services:
     volumes:
       - ./file_table.sql:/docker-entrypoint-initdb.d/file_table.sql
       - ./train_table.sql:/docker-entrypoint-initdb.d/train_table.sql
+      - ./airflow_ddl.sql:/docker-entrypoint-initdb.d/airflow_ddl.sql
       # /mnt/postgres/data:/var/lib/postgresql/data
     # env_file:
     #   - ./db.env
     environment:
+         - TZ=Asia/Seoul
          - POSTGRES_USER=${DB_USER}
          - POSTGRES_PASSWORD=${DB_PW}
          - POSTGRES_DB=${DB_NAME}
@@ -27,6 +29,7 @@ services:
       container_name: ${ML_CONTAINER_NAME}
       ports:
           - ${AIZT_PORT}:${DOCKER_PORT}
+          - 7070:8080
       environment:
           - XEDM_HOME=${XEDM_HOME}
           - XEDM_WORKING_STG=${XEDM_WORKING_STG}
