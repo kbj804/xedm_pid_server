@@ -65,7 +65,7 @@ RUN pip install pymuPDF pillow opencv-python pytesseract scikit-image
 
 # Airflow
 RUN pip install apache-airflow
-RUN pip install SQLAlchemy==1.3.23 \
+RUN pip install SQLAlchemy==1.3.23
 
 # use bash always
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
