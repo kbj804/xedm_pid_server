@@ -1,3 +1,8 @@
+# Shell Script 읽어오기 테스트
+while read line; 
+do
+    export $line
+done < .env
 # Auto Inatall Guideline
 # require: docker image file, ml_model_file, configure_file, 
 # 윈도우에서 작업한 쉘 스크립트를 리눅스에서 실행할때 필요
@@ -31,30 +36,41 @@ sudo git clone ${GIT_URL} ${PROJECT_PATH}
 # 
 # docker containser start
 # sudo docker restart $CONTAINER_NAME
-echo "Docker container reset & restart ..."
-sudo docker stop ${CONTAINER_NAME}
-sudo docker rm ${CONTAINER_NAME}
-# sudo docker run -d --restart always --name ${CONTAINER_NAME} -p ${AIZT_PORT}:${DOCKER_PORT} ${DOCKER_IMAGE}:${DOCKER_VERSION}
-docker-compose --env-file ${CURRENT_PATH}/.env up
+echo "### Docker container reset & restart ..."
+sudo docker stop ${ML_CONTAINER_NAME}
+sudo docker rm ${ML_CONTAINER_NAME}
+# sudo docker run -d --restart always --name ${ML_CONTAINER_NAME} -p ${AIZT_PORT}:${DOCKER_PORT} ${DOCKER_IMAGE}:${DOCKER_VERSION}
+docker-compose --env-file ${CURRENT_PATH}/.env up -d
 # 
-# make working directory in docker
-# sudo docker exec ${CONTAINER_NAME} mkdir ${DOCKER_PATH}
 # 
 # input project source code
-echo "Downloading XEDM ML Server source code ..."
-sudo docker cp ${PROJECT_PATH} ${CONTAINER_NAME}:${DOCKER_PATH}
+echo "### Downloading XEDM ML Server source code ..."
+sudo docker cp ${PROJECT_PATH} ${ML_CONTAINER_NAME}:${DOCKER_PATH}
 # 
-echo "Setting app and ml config files ..."
-sudo docker cp ${CURRENT_PATH}/${CONFIG_NAME} ${CONTAINER_NAME}:${DOCKER_PATH}/aizt/fastapp/common/${CONFIG_NAME}
-sudo docker cp ${CURRENT_PATH}/${ML_MODEL_NAME} ${CONTAINER_NAME}:${DOCKER_PATH}/aizt/fastapp/data/results/ml_model/${ML_MODEL_NAME}
+echo "### Setting app and ml config files ..."
+# make working directory in docker
+sudo docker exec ${ML_CONTAINER_NAME} mkdir -p ${DOCKER_PATH}/aizt/fastapp/data/results/ml_model
+sudo docker cp ${CURRENT_PATH}/${CONFIG_NAME} ${ML_CONTAINER_NAME}:${DOCKER_PATH}/aizt/fastapp/common/${CONFIG_NAME}
+sudo docker cp ${CURRENT_PATH}/${ML_MODEL_NAME} ${ML_CONTAINER_NAME}:${DOCKER_PATH}/aizt/fastapp/data/results/ml_model/${ML_MODEL_NAME}
 # 
-# 
-echo "Starting XEDM ML Server  ..."
-sudo docker exec ${CONTAINER_NAME} python3 ${DOCKER_PATH}/aizt/fastapp/main.py
+echo "### Setting Airflow DDL on DB ..."
+sudo docker exec ${ML_CONTAINER_NAME} airflow
+# sudo docker exec ${ML_CONTAINER_NAME} sed -i "103s/True/False/" ~/airflow/airflow.cfg # disable samples
+sudo docker exec ${ML_CONTAINER_NAME} sed -i "s/SequentialExecutor/LocalExecutor/g" /root/airflow/airflow.cfg
+sudo docker exec ${ML_CONTAINER_NAME} sed -i "s/sqlite:\/\/\/\/root\/airflow\/airflow.db/postgresql+psycopg2:\/\/${DB_USER}:${DB_PW}@${DB_ADD}:${PORT_FORWARD}\/airflow/g" /root/airflow/airflow.cfg
+sudo docker exec ${ML_CONTAINER_NAME} airflow db init
+sudo docker exec ${ML_CONTAINER_NAME} airflow users create --username admin --firstname air --lastname flow --role Admin --email kbj804@inzent.com -p 1234
+sudo docker exec ${ML_CONTAINER_NAME} airflow webserver -D
+# sudo docker exec ${ML_CONTAINER_NAME} airflow scheduler
+
+# sed -i 's/sqlite:\/\/\/\/root\/airflow\/airflow.db/postgresql+psycopg2:\/\/iztbj:1234@192.168.21.204:2346\/airflow/g' /root/airflow/airflow.cfg
+#  postgresql+psycopg2://iztbj:1234@192.168.21.204:2346
+echo "### Starting XEDM ML Server  ..."
+sudo docker exec ${ML_CONTAINER_NAME} python3 ${DOCKER_PATH}/aizt/fastapp/main.py
 #
 #
-echo "Databases ENV Setting & "
-PORT_FORWARD=$(awk '/^\[DB]/{f=1} f==1&&/^PORT/{print $3;exit}' ${CONFIG_FILE})
-DB_USER=$(awk '/^\[DB]/{f=1} f==1&&/^USER/{print $3;exit}' ${CONFIG_FILE})
-DB_PW=$(awk '/^\[DB]/{f=1} f==1&&/^USER/{print $3;exit}' ${CONFIG_FILE})
-DB_NAME=$(awk '/^\[DB]/{f=1} f==1&&/^NAME/{print $3;exit}' ${CONFIG_FILE})
+# echo "Databases ENV Setting & "
+# PORT_FORWARD=$(awk '/^\[DB]/{f=1} f==1&&/^PORT/{print $3;exit}' ${CONFIG_FILE})
+# DB_USER=$(awk '/^\[DB]/{f=1} f==1&&/^USER/{print $3;exit}' ${CONFIG_FILE})
+# DB_PW=$(awk '/^\[DB]/{f=1} f==1&&/^USER/{print $3;exit}' ${CONFIG_FILE})
+# DB_NAME=$(awk '/^\[DB]/{f=1} f==1&&/^NAME/{print $3;exit}' ${CONFIG_FILE})

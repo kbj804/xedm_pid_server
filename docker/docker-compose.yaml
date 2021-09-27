@@ -9,8 +9,9 @@ services:
     ports:
       - ${PORT_FORWARD}:5432
     volumes:
-      - ./file_table.sql:/docker-entrypoint-initdb.d/file_table.sql
-      - ./train_table.sql:/docker-entrypoint-initdb.d/train_table.sql
+      - ./database/file_table.sql:/docker-entrypoint-initdb.d/file_table.sql
+      - ./database/train_table.sql:/docker-entrypoint-initdb.d/train_table.sql
+      - ./database/airflow_ddl.sql:/docker-entrypoint-initdb.d/airflow_ddl.sql
       # /mnt/postgres/data:/var/lib/postgresql/data
     # env_file:
     #   - ./db.env
@@ -22,15 +23,20 @@ services:
     restart: always
 
   'mlserver':
+      image: ${DOCKER_IMAGE}:${DOCKER_VERSION}
       restart: always
       container_name: ${ML_CONTAINER_NAME}
       ports:
           - ${AIZT_PORT}:${DOCKER_PORT}
-      image: ${DOCKER_IMAGE}:${DOCKER_VERSION}
+          - 7070:8080
       environment:
           - XEDM_HOME=${XEDM_HOME}
           - XEDM_WORKING_STG=${XEDM_WORKING_STG}
           - MODEL_PATH=${MODEL_PATH}
+      volumes:
+        - ${PROJECT_PATH}:${DOCKER_PATH}
+      depends_on:
+        - postgres
 
 
 
