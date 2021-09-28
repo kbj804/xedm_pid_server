@@ -45,28 +45,29 @@ docker-compose --env-file ${CURRENT_PATH}/.env up -d
 # 
 # input project source code
 echo "### Downloading XEDM ML Server source code ..."
-sudo docker cp ${PROJECT_PATH} ${ML_CONTAINER_NAME}:${DOCKER_PATH}
+# sudo docker cp ${PROJECT_PATH} ${ML_CONTAINER_NAME}:${DOCKER_PATH}
 # 
 echo "### Setting app and ml config files ..."
 # make working directory in docker
-sudo docker exec ${ML_CONTAINER_NAME} mkdir -p ${DOCKER_PATH}/aizt/fastapp/data/results/ml_model
-sudo docker cp ${CURRENT_PATH}/${CONFIG_NAME} ${ML_CONTAINER_NAME}:${DOCKER_PATH}/aizt/fastapp/common/${CONFIG_NAME}
-sudo docker cp ${CURRENT_PATH}/${ML_MODEL_NAME} ${ML_CONTAINER_NAME}:${DOCKER_PATH}/aizt/fastapp/data/results/ml_model/${ML_MODEL_NAME}
+sudo docker exec ${ML_CONTAINER_NAME} mkdir -p ${DOCKER_PATH}/fastapp/data/results/ml_model
+sudo docker cp ${CURRENT_PATH}/${CONFIG_NAME} ${ML_CONTAINER_NAME}:${DOCKER_PATH}/fastapp/common/${CONFIG_NAME}
+sudo docker cp ${CURRENT_PATH}/${ML_MODEL_NAME} ${ML_CONTAINER_NAME}:${DOCKER_PATH}/fastapp/data/results/ml_model/${ML_MODEL_NAME}
 # 
 echo "### Setting Airflow DDL on DB ..."
 sudo docker exec ${ML_CONTAINER_NAME} airflow
-# sudo docker exec ${ML_CONTAINER_NAME} sed -i "103s/True/False/" ~/airflow/airflow.cfg # disable samples
+sudo docker exec ${ML_CONTAINER_NAME} sed -i "103s/True/False/" ~/airflow/airflow.cfg # disable samples
 sudo docker exec ${ML_CONTAINER_NAME} sed -i "s/SequentialExecutor/LocalExecutor/g" /root/airflow/airflow.cfg
 sudo docker exec ${ML_CONTAINER_NAME} sed -i "s/sqlite:\/\/\/\/root\/airflow\/airflow.db/postgresql+psycopg2:\/\/${DB_USER}:${DB_PW}@${DB_ADD}:${PORT_FORWARD}\/airflow/g" /root/airflow/airflow.cfg
 sudo docker exec ${ML_CONTAINER_NAME} airflow db init
 sudo docker exec ${ML_CONTAINER_NAME} airflow users create --username admin --firstname air --lastname flow --role Admin --email kbj804@inzent.com -p 1234
 sudo docker exec ${ML_CONTAINER_NAME} airflow webserver -D
-# sudo docker exec ${ML_CONTAINER_NAME} airflow scheduler
+sudo docker exec ${ML_CONTAINER_NAME} ln -s ${DOCKER_PATH}/docker/airflow /root/airflow/dags
+sudo docker exec ${ML_CONTAINER_NAME} airflow scheduler -D
 
 # sed -i 's/sqlite:\/\/\/\/root\/airflow\/airflow.db/postgresql+psycopg2:\/\/iztbj:1234@192.168.21.204:2346\/airflow/g' /root/airflow/airflow.cfg
 #  postgresql+psycopg2://iztbj:1234@192.168.21.204:2346
 echo "### Starting XEDM ML Server  ..."
-sudo docker exec ${ML_CONTAINER_NAME} python3 ${DOCKER_PATH}/aizt/fastapp/main.py
+sudo docker exec ${ML_CONTAINER_NAME} python3 ${DOCKER_PATH}/fastapp/main.py
 #
 #
 # echo "Databases ENV Setting & "
