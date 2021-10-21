@@ -1,10 +1,11 @@
 # airflow.cfg에서 dags_folder를 /root/airflow/dags 인지 확인 / airflow.cfg의 가장 상단에 있는 dags_folder에 존재하는 Workflow 파이썬 파일만 인식하기 때문
 # docker cp ./echo_test.py sTest:/root/airflow/dags/echo_test.py
+# or docker exec sTest ln -s /xedm_app/docker/airflow /root/airflow/dags
 # airflow scheduler
 from airflow import models
 from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
- 
+
 default_args = {
         'owner': 'airflow',
         'depends_on_past': False,

@@ -49,9 +49,9 @@ sudo docker cp ${PROJECT_PATH} ${ML_CONTAINER_NAME}:${DOCKER_PATH}
 # 
 echo "### Setting app and ml config files ..."
 # make working directory in docker
-sudo docker exec ${ML_CONTAINER_NAME} mkdir -p ${DOCKER_PATH}/aizt/fastapp/data/results/ml_model
-sudo docker cp ${CURRENT_PATH}/${CONFIG_NAME} ${ML_CONTAINER_NAME}:${DOCKER_PATH}/aizt/fastapp/common/${CONFIG_NAME}
-sudo docker cp ${CURRENT_PATH}/${ML_MODEL_NAME} ${ML_CONTAINER_NAME}:${DOCKER_PATH}/aizt/fastapp/data/results/ml_model/${ML_MODEL_NAME}
+sudo docker exec ${ML_CONTAINER_NAME} mkdir -p ${DOCKER_PATH}/fastapp/data/results/ml_model
+sudo docker cp ${CURRENT_PATH}/${CONFIG_NAME} ${ML_CONTAINER_NAME}:${DOCKER_PATH}/fastapp/common/${CONFIG_NAME}
+sudo docker cp ${CURRENT_PATH}/${ML_MODEL_NAME} ${ML_CONTAINER_NAME}:${DOCKER_PATH}/fastapp/data/results/ml_model/${ML_MODEL_NAME}
 # 
 echo "### Setting Airflow DDL on DB ..."
 sudo docker exec ${ML_CONTAINER_NAME} airflow
@@ -66,7 +66,7 @@ sudo docker exec ${ML_CONTAINER_NAME} airflow webserver -D
 # sed -i 's/sqlite:\/\/\/\/root\/airflow\/airflow.db/postgresql+psycopg2:\/\/iztbj:1234@192.168.21.204:2346\/airflow/g' /root/airflow/airflow.cfg
 #  postgresql+psycopg2://iztbj:1234@192.168.21.204:2346
 echo "### Starting XEDM ML Server  ..."
-sudo docker exec ${ML_CONTAINER_NAME} python3 ${DOCKER_PATH}/aizt/fastapp/main.py
+sudo docker exec ${ML_CONTAINER_NAME} python3 ${DOCKER_PATH}/fastapp/main.py
 #
 #
 # echo "Databases ENV Setting & "
