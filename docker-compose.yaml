@@ -1,0 +1,43 @@
+version: "3"
+# docker-compose --env-file .env up --build
+networks:
+  xedm_network:
+    driver: bridge
+
+services:
+  # DB
+  postgres-xedm:
+    container_name: postgres-xedm
+    build:
+      context: .
+      dockerfile: postgres-xedm/postgres-xedm.Dockerfile
+    environment:
+      - POSTGRES_USER=iztbj
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=pidb
+    image: xedm/postgres
+    ports:
+      - "35432:5432"
+    # env_file:
+    #   - ./db.env
+    networks:
+      - xedm_network
+
+  api-mlserver:
+    container_name: api-mlserver
+    build:
+      context: .
+      dockerfile: api-mlserver/api-mlserver.Dockerfile
+    image: xedm/api-mlserver
+    restart: always
+    ports:
+      - "8001:8001"
+      - "7070:8080"
+    environment:
+      - XEDM_HOME=/api-mlserver
+      - XEDM_WORKING_STG=/xedm_storage
+      - MODEL_PATH=/api-mlserver/data/results/ml_model/auto_ml_model_0623.pkl
+    volumes:
+      - ./api-mlserver/sources:/api-mlserver
+    networks:
+      - xedm_network
