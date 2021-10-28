@@ -41,3 +41,18 @@ services:
       - ./api-mlserver/sources:/api-mlserver
     networks:
       - xedm_network
+
+  
+  api-aiocr:
+    container_name: api-aiocr
+    build:
+      context: .
+      dockerfile: api-aiocr/api-aiocr.Dockerfile
+    image: xedm/api-aiocr
+    restart: always
+    ports:
+      - "7001:7001"
+    volumes:
+      - ./api-aiocr/sources:/api-aiocr
+    networks:
+      - xedm_network

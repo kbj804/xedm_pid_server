@@ -18,7 +18,7 @@ RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezo
 # Setting WORK DIR
 COPY ./api-mlserver/sources /api-mlserver
 COPY ./api-mlserver/requirements.txt /api-mlserver/requirements.txt
-COPY ./auto_ml_model_0623.pkl {MODEL_PATH}
+COPY ./api-mlserver/auto_ml_model_0623.pkl {MODEL_PATH}
 
 COPY ./wait-for-it.sh /bin/wait-for-it.sh
 RUN chmod +x /bin/wait-for-it.sh
