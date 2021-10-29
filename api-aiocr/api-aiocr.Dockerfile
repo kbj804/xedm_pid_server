@@ -3,14 +3,17 @@ ENV PYTHONUNBUFFERED 1
 ARG DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /aiocr
-COPY *.txt ./
-COPY imgproc.py /usr/local/lib/python3.8/dist-packages/ 
-COPY file_utils.py /usr/local/lib/python3.8/dist-packages/ 
-COPY aiocr.py ./
-COPY model ./model
-COPY h2o-3.34.0.3-py2.py3-none-any.whl ./
-ADD input /aiocr/input/
-ADD output /aiocr/output/
+COPY ./api-aiocr/sources/imgproc.py /usr/local/lib/python3.8/dist-packages/ 
+COPY ./api-aiocr/sources/file_utils.py /usr/local/lib/python3.8/dist-packages/ 
+
+COPY ./api-aiocr/sources /aiocr
+COPY ./api-aiocr/requirements.txt /aiocr/requirements.txt
+# COPY *.txt ./
+# COPY ./api-aiocr/sources/aiocr.py /aiocr
+# COPY ./api-aiocr/sources/model /aiocr/model
+# COPY ./api-aiocr/sources/h2o-3.34.0.3-py2.py3-none-any.whl /aiocr
+# ADD input /aiocr/input/
+# ADD output /aiocr/output/
 
 RUN apt-get update -y
 RUN apt-get -y install tesseract-ocr tesseract-ocr-kor libtesseract-dev tesseract-ocr-script-hang tesseract-ocr-script-hang-vert 

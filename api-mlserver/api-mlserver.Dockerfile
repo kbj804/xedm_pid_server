@@ -37,7 +37,7 @@ RUN apt-get install libgomp1 -y
 
 # 개인정보 검출 python Lib 설치
 # RUN pip install requests uvicorn fastapi sqlalchemy pyjwt bcrypt pdfminer.six python-pptx python-docx openpyxl xmltodict pandas python-multipart psycopg2-binary konfig
-RUN pip install -r /api-user/requirements.txt
+RUN pip install -r /api-mlserver/requirements.txt
 
 # Auto Machine Learning
 # RUN pip install pycaret

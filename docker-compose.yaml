@@ -39,9 +39,9 @@ services:
       - MODEL_PATH=/api-mlserver/data/results/ml_model/auto_ml_model_0623.pkl
     volumes:
       - ./api-mlserver/sources:/api-mlserver
+      - ./ocr_work:/ocr_work
     networks:
       - xedm_network
-
   
   api-aiocr:
     container_name: api-aiocr
@@ -53,6 +53,8 @@ services:
     ports:
       - "7001:7001"
     volumes:
-      - ./api-aiocr/sources:/api-aiocr
+      - ./api-aiocr/sources:/aiocr
+      - ./ocr_work:/ocr_work
+
     networks:
       - xedm_network

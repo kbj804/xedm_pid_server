@@ -23,7 +23,12 @@ from pdfminer.layout import LTTextContainer
 import  json
 
 
-from common.consts import SAMPLE_FOLDER_PATH, UPLOAD_DIRECTORY, IMG_OUTPUT_PATH
+from common.consts import SAMPLE_FOLDER_PATH, UPLOAD_DIRECTORY
+# temp
+IMG_OUTPUT_PATH = '/ocr_work'
+IMG_OUTPUT = os.path.join(IMG_OUTPUT_PATH, 'output')
+IMG_INPUT = os.path.join(IMG_OUTPUT_PATH, 'input')
+
 from utils.logger_handler import get_logger
 from utils.file_module.pdf_layout_scanner import get_pages
 
@@ -378,15 +383,15 @@ class loadFileManager:
                     # load it to PIL
                     image = Image.open(io.BytesIO(image_bytes))
                     # save it to local disk
-                    IMG_PATH = os.path.join(IMG_OUTPUT_PATH, f"image{page_index+1}_{image_index}.{image_ext}")
+                    IMG_PATH = os.path.join(IMG_INPUT, f"image{page_index+1}_{image_index}.{image_ext}")
                     image.save(open(IMG_PATH, "wb"))
         # self.clear_img_folder()
             
     def clear_img_folder(self):
         """clear img extraction output folder"""
-        file_list = os.listdir(IMG_OUTPUT_PATH) 
+        file_list = os.listdir(IMG_INPUT) 
         for file in file_list:
-            RM_PATH = os.path.join(IMG_OUTPUT_PATH, file)
+            RM_PATH = os.path.join(IMG_INPUT, file)
             os.remove(RM_PATH)
 
     read_function = {
