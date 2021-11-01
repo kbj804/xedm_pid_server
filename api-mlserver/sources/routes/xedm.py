@@ -1,6 +1,7 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, FastAPI, File, UploadFile, BackgroundTasks
+from fastapi.responses import JSONResponse
 # from future.utils import PY2
 from sqlalchemy.orm import Session
 from starlette.requests import Request
@@ -12,7 +13,6 @@ from database.schema import Train, Files
 import models as m
 from errors import exceptions as ex
 from inspect import currentframe as frame
-
 from utils.file_module.load_file_manager import loadFileManager
 from utils.preprocess_reg import preprocess_reg
 from utils.logger_handler import get_logger
@@ -28,20 +28,30 @@ import os
 router = APIRouter(prefix='/xedm')
 logger = get_logger()
 
+IMG_OUTPUT_PATH = '/ocr_work'
+IMG_OUTPUT = os.path.join(IMG_OUTPUT_PATH, 'output')
+IMG_INPUT = os.path.join(IMG_OUTPUT_PATH, 'input')
+import pandas as pd
 
-# @router.get('/loadml')
-# async def load_ml_for_xedm(request: Request):
-#     """
-#     no params\n
-#     :return\n
-#     Load ML Model
-#     """
-#     request.state.inspect = frame()
-#     hoo.load_md(USING_MODEL_PATH)
-#     if not hoo.model:
-#         raise ex.XedmLoadFailEx()
-
-#     return m.MessageOk()
+@router.get('/imageread')
+async def get_image_read(request: Request):
+    """
+    no params\n
+    :return\n
+    Load ML Model
+    """
+    request.state.inspect = frame()
+    try:
+        if os.listdir(IMG_OUTPUT):
+            # files =  os.listdir(IMG_OUTPUT)
+            RESULT_PATH = os.path.join(IMG_OUTPUT, 'rslt.json')
+            with open(RESULT_PATH) as json_file:
+                json_data = json.load(json_file)
+                
+            return json_data
+    
+    except:
+        return ex.FileSearchEx()
 
 @router.post("/uploadTest")
 async def upload_files_read_test(request: Request, background_tasks: BackgroundTasks, files: List[UploadFile] = File(...) , session: Session = Depends(db.session)):

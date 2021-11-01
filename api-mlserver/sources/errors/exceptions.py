@@ -166,6 +166,16 @@ class FileExtEx(APIException):
             ex=ex,
         )
 
+class FileSearchEx(APIException):
+    def __init__(self, ex: Exception = None):
+        super().__init__(
+            status_code=StatusCode.HTTP_400,
+            msg=f"RESULT 파일이 존재하지 않습니다.",
+            detail=f"no files",
+            code=f"{StatusCode.HTTP_400}{'10'.zfill(4)}",
+            ex=ex,
+        )
+
 class XedmLoadFailEx(APIException):
     def __init__(self, ex: Exception = None):
         super().__init__(
