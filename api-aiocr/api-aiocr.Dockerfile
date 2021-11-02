@@ -8,6 +8,11 @@ COPY ./api-aiocr/sources/file_utils.py /usr/local/lib/python3.8/dist-packages/
 
 COPY ./api-aiocr/sources /aiocr
 COPY ./api-aiocr/requirements.txt /aiocr/requirements.txt
+
+# after DVC
+COPY ./datas/h2o-3.34.0.3-py2.py3-none-any.whl /aiocr/h2o-3.34.0.3-py2.py3-none-any.whl
+COPY ./datas/model /aiocr/model
+
 # COPY *.txt ./
 # COPY ./api-aiocr/sources/aiocr.py /aiocr
 # COPY ./api-aiocr/sources/model /aiocr/model

@@ -28,3 +28,52 @@
 ``` /ocr_work/input ``` : ```api-aiocr```에서 img to data 결과 저장
 
 
+## DVC(Data Version Control)
+Machine Learning Model File을 저장 및 관리하기 위한 라이브러리
+
+### 사용방법
+#### 설치  
+```pip install dvc```
+
+#### 초기화  
+```dvc init```
+
+
+### Local
+
+##### 연결  
+>```dvc remote add -d [DATA_DIR] [SAVE_FOLDER_DIR] ```  
+>```[DATA_DIR]```에 모델파일(.pd, .ckpt ... ) 저장  
+
+##### 파일 등록
+>```dvc add [DATA_DIR]```  
+
+##### 파일 업로드  
+>```dvc push```  
+>push후 프로젝트 폴더에 [SAVE_FOLDER_DIR] 가 생성되고, 이 안에 md5 형태로 데이터 저장  
+
+##### 파일 다운로드
+>```dvc pull```  
+> ```[DATA_DIR]``` 폴더의 내용이 지워지더라도 dvc pull 로 다운로드
+
+
+### SSH
+
+##### 연결
+>```dvc remote add --default ssh-storage ssh://[HOST_ADDRESS]/[PATH]```
+
+##### 사용자 설정
+> ```dvc remote modify ssh-storage user aimanager```  
+
+##### 포트 설정
+> ```dvc remote modify ssh-storage port 22```
+
+##### 사용자 패스워드
+> ```dvc remote modify --local ssh-storage password [PASSWORD]```
+
+##### 파일 등록
+>```dvc add [DATA_DIR]```  
+
+##### 파일 업로드  
+>```dvc push```  
+

@@ -36,7 +36,7 @@ MANIFEST
 *.bat
 *.ps1
 
-# *.jpg
+*.jpg
 *.png
 
 # jupyter
@@ -57,6 +57,7 @@ samples/
 *.json
 *.pb
 *.whl
+*.data*
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -184,3 +185,4 @@ yarn-error.log*
 
 # temp ignore for clean up git
 alembic-script.py
+/datas

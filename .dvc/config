@@ -1,0 +1,6 @@
+[core]
+    remote = ssh-storage
+['remote "ssh-storage"']
+    url = ssh://183.111.96.29/home/aimanager
+    user = aimanager
+    port = 22
