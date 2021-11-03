@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from starlette.requests import Request
 
-from common.consts import UPLOAD_DIRECTORY, ML_MODEL_PATH, IMG_OUTPUT_PATH
+from common.consts import UPLOAD_DIRECTORY, ML_MODEL_PATH, IMG_OUTPUT_PATH, IMG_OUTPUT
 
 from database.conn import db
 from database.schema import Train, Files
@@ -28,10 +28,6 @@ import os
 router = APIRouter(prefix='/xedm')
 logger = get_logger()
 
-IMG_OUTPUT_PATH = '/ocr_work'
-IMG_OUTPUT = os.path.join(IMG_OUTPUT_PATH, 'output')
-IMG_INPUT = os.path.join(IMG_OUTPUT_PATH, 'input')
-import pandas as pd
 
 @router.get('/imageread')
 async def get_image_read(request: Request):

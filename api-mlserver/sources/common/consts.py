@@ -40,6 +40,23 @@ if not os.path.exists(IMG_OUTPUT_PATH):
 else:
     logger.info(f"Directory {IMG_OUTPUT_PATH} already exist ")
 
+IMG_OUTPUT_PATH = '/ocr_work'
+IMG_OUTPUT = os.path.join(IMG_OUTPUT_PATH, 'output')
+IMG_INPUT = os.path.join(IMG_OUTPUT_PATH, 'input')
+
+if not os.path.exists(IMG_OUTPUT):
+    os.mkdir(IMG_OUTPUT)
+    logger.info(f"Directory {IMG_OUTPUT} Created ")
+else:
+    logger.info(f"Directory {IMG_OUTPUT} already exist ")
+
+if not os.path.exists(IMG_INPUT):
+    os.mkdir(IMG_INPUT)
+    logger.info(f"Directory {IMG_INPUT} Created ")
+else:
+    logger.info(f"Directory {IMG_INPUT} already exist ")
+
+
 # Config Path
 _CONFIG_PATH = os.path.join(COMMON_PATH, 'conf.ini')
 logger.info(f'CONFIG_PATH : {_CONFIG_PATH}')

@@ -38,7 +38,7 @@ services:
       - XEDM_WORKING_STG=/xedm_storage
       - MODEL_PATH=/api-mlserver/data/results/ml_model/auto_ml_model_0623.pkl
     volumes:
-      - ./api-mlserver/sources:/api-mlserver
+      # - ./api-mlserver/sources:/api-mlserver
       - ./ocr_work:/ocr_work
     networks:
       - xedm_network
@@ -53,7 +53,7 @@ services:
     ports:
       - "7001:7001"
     volumes:
-      - ./api-aiocr/sources:/aiocr
+      # - ./api-aiocr/sources:/aiocr
       - ./ocr_work:/ocr_work
 
     networks:

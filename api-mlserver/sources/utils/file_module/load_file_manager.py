@@ -23,11 +23,7 @@ from pdfminer.layout import LTTextContainer
 import  json
 
 
-from common.consts import SAMPLE_FOLDER_PATH, UPLOAD_DIRECTORY
-# temp
-IMG_OUTPUT_PATH = '/ocr_work'
-IMG_OUTPUT = os.path.join(IMG_OUTPUT_PATH, 'output')
-IMG_INPUT = os.path.join(IMG_OUTPUT_PATH, 'input')
+from common.consts import SAMPLE_FOLDER_PATH, UPLOAD_DIRECTORY, IMG_OUTPUT, IMG_INPUT
 
 from utils.logger_handler import get_logger
 from utils.file_module.pdf_layout_scanner import get_pages
