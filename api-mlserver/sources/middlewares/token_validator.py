@@ -35,6 +35,10 @@ from utils.query_utils import to_dict
 
 # FastAPI 공식 문서에 따라 미들웨어 생성
 async def access_control(request: Request, call_next):
+    """
+    stallet BaseHTTPMiddleware의 dispatch 함수
+    API Request 관리
+    """
     request.state.req_time = D.datetime()
     request.state.start = time.time()
     # 핸들링안되는 에러를 로딩하기 위한 inspect Ex) 500 Error

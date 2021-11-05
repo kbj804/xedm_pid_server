@@ -2,7 +2,9 @@ import re
 from common.consts import ADDRESS_UmMyunDong, ADDRESS_SiGunGu, ADDRESS_RoGil
 
 class RegexConfigs:
-
+    """
+    개인정보 검출 정규식 정의
+    """
     def __init__(self):
         
         # 지역별 전화번호

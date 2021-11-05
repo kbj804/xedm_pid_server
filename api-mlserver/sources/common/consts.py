@@ -99,9 +99,9 @@ ML_MODEL_FOLDER_PATH = os.path.join(RESULT_FOLDER_PATH, 'ml_model')
 ML_MODEL_PATH = os.path.join(ML_MODEL_FOLDER_PATH, 'auto_ml_model_0623')
 
 
-# DEFAULT_CSV_PATH = f'{BASE_DIR}\\'
-
-
+#--------------------------------------------------#
+# ./sources/common/conf.ini
+#--------------------------------------------------#
 # URL
 xedm = cc.get_map("xedm")
 X_URL = xedm['ADD']

@@ -10,6 +10,8 @@ class StatusCode:
 
 class APIException(Exception):
     '''
+    예외 처리 관리
+
     code: Custom Error Code
     msg: Error msg for User
     detail: Info of Error

@@ -8,6 +8,27 @@
 #### env
 ``` docker-compose up --build --env_file=.env ```
 
+## Machine Learning Model Files
+
+### IDC Config
+```
+IP: 183.111.96.29
+PORT: 22
+USER: aimanager
+PW: dlswpsxm1!1
+Model PATH: /home/aimanager
+```
+
+### Download
+```
+# ./project_folder
+dvc remote add --default ssh-storage ssh://183.111.96.29/home/aimanager
+dvc remote modify ssh-storage user aimanager
+dvc remote modify ssh-storage port 22
+dvc remote modify --local ssh-storage password 'dlswpsxm1!1'
+dvc pull
+```
+
 
 ## Config
 

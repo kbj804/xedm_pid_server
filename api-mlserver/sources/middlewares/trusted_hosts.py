@@ -9,6 +9,10 @@ ENFORCE_DOMAIN_WILDCARD = "Domain wildcard patterns must be like '*.example.com'
 
 
 class TrustedHostMiddleware:
+    """
+    Product 단계일때 사용. 
+    외부에 배포할 경우 hosts 관리 미들웨어.
+    """
     def __init__(
         self,
         app: ASGIApp,

@@ -6,6 +6,9 @@ import logging
 
 
 class SQLAlchemy:
+    """
+    DB session 연결 관리
+    """
     def __init__(self, app: FastAPI = None, **kwargs):
         self._engine = None
         self._session = None

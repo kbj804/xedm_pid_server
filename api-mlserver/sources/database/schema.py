@@ -17,11 +17,13 @@ from database.conn import Base, db
 
 
 class BaseMixin:
+    """
+    SQL ORM
+    """
     id = Column(Integer, primary_key=True, index=True)
     created_at = Column(DateTime, nullable=False, default=func.current_timestamp())
     updated_at = Column(DateTime, nullable=False, default=func.current_timestamp(), onupdate=func.current_timestamp())
 
-    # 얘 없어도 됨.. 실행이안됨 왜?
     def __init__(self):
         # self._q = None
         # self._session = None

@@ -1,3 +1,4 @@
+# 개인정보 검출 테스트용 API, 실제 동작에는 영향 없음
 from typing import List
 from uuid import uuid4
 
