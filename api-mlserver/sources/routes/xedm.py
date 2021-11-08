@@ -85,9 +85,11 @@ async def upload_files_read_test(request: Request, background_tasks: BackgroundT
 @router.get('/session')
 async def connect_xedm_session(request: Request):
     """
-    no params\n
-    :return\n
-    Connect session
+    XEDM Session Key 요청  
+    no params  
+
+    :return XEDM Session Key
+    
     """
     request.state.inspect = frame()
     res = connect_session()
@@ -101,9 +103,10 @@ async def connect_xedm_session(request: Request):
 @router.get('/xedmresponse', response_model = m.XedmToken)
 async def xedm_response_test(request: Request):
     """
-    no params \n
-    descriptions: Xedm Token Test \n
-    return XedmToken: \n
+    XEDM에 전송하는 파일 포맷
+    no params  
+    descriptions: Xedm Token Test  
+    return XedmToken:  
     """
     request.state.inspect = frame()
     docid = "2021050310132101"

@@ -31,7 +31,10 @@ from utils.file_module.pdf_layout_scanner import get_pages
 logger = get_logger()
 
 class loadFileManager:
-    # 파일 이름, 확장자 분리
+    """
+    File Object
+    파일의 정보를 담고있는 객체로 사용
+    """
     def __init__(self, path):
         # dir_path = os.getcwd()
         self.path = path
@@ -41,6 +44,7 @@ class loadFileManager:
 
         self.data = None
         """
+        self.data 예시
         [
             {
                 page:1
@@ -61,13 +65,17 @@ class loadFileManager:
             print(f"### load_file_manager 에서 지원하지 않는 확장자 입니다. ### {self.name}.{self.ext}")
             pass
             
-    # 확장자에 맞는 read 함수로 매핑
     def read_file(self):
+        """
+        확장자에 맞는 read 함수로 Match
+        """
         result = self.read_function[self.ext](self)
         return result
 
-    # 읽을 수 있는 확장자인가 검사
     def check_ext(self):
+        """
+        읽을 수 있는 확장자 Check
+        """
         try:
             if self.read_function[self.ext]:
                 return True
@@ -78,11 +86,14 @@ class loadFileManager:
         except Exception as e:
             print("####ERROR#### {0} dose not exist in ext Dictionary".format(e))
 
-    # 확장자 별 데이터 오픈
-    # pdf, hwp, ppt, docx, ....
 
     def read_pdf(self):
-        # using pdfminer.six  / No pdfminer
+        """
+        확장자 별 데이터 read
+        pdf, hwp, ppt, docx, ....
+        
+        using pdfminer.six  / No pdfminer
+        """
         result = []
         for i, page_layout in enumerate(extract_pages(self.path)):
             page_contents=''
@@ -129,7 +140,7 @@ class loadFileManager:
     def read_hwp(self):
         """
         hwp -> pdf 로 변환 후 pdf_read를 해서 값을 반환해 주기 때문에 약간 골치아픔..
-        window에서 RegisterMoudle 설정해줘야 하고, 리눅스에서는 어떻게 될 지 모르겠음.
+        window에서 RegisterMoudle 설정해줘야 하고, 리눅스에서는 불가능
         """
         import win32com.client as win32
         import win32gui
@@ -252,8 +263,10 @@ class loadFileManager:
     #     return self.read_pdf()
 
 
-    # csv 코덱문제 해결하고 엑셀읽기 하고 html읽기 하면됨 
     def read_csv(self):
+        """
+        csv 코덱문제 해결하고 엑셀읽기 하고 html읽기 하면됨 
+        """
         result=[]
         read_list=[]
         with open(self.path, 'r', encoding='UTF8') as file:
@@ -268,10 +281,12 @@ class loadFileManager:
 
         return result
 
-    # 리스트 값 안에 숫자형도 있어서 \n . join 사용이 안됨
-    # 리스트가 3차원 까지 가서 코드가 다소 복잡함
-    # 마지막 리스트가 문자열로 치환이 안되어 추수 수정 필요
     def read_xlsx(self):
+        """
+        리스트 값 안에 숫자형도 있어서 \n . join 사용이 안됨
+        리스트가 3차원 까지 가서 코드가 다소 복잡함
+        마지막 리스트가 문자열로 치환이 안되어 추수 수정 필요
+        """
         workbook = openpyxl.load_workbook(self.path, data_only=True)
         # Sheet 목록
         sheet_list = workbook.sheetnames
@@ -306,6 +321,9 @@ class loadFileManager:
         
 
     def read_txt(self):
+        """
+        txt file read
+        """
         result : list=[]
         with open(self.path, 'r', encoding='UTF8') as f:
             data = f.read()
@@ -313,10 +331,14 @@ class loadFileManager:
         return result
     
     def read_html(self):
+        """
+        todo
+        """
         pass
 
     def read_json(self):
-        """ json parser
+        """ 
+        json file read
         """
         result : list=[]
         with open(self.path, 'r') as json_file:
@@ -327,7 +349,8 @@ class loadFileManager:
         return result
     
     def read_xml(self):
-        """ xml parser
+        """ 
+        xml file read
         : return dict
         """
         from xml.etree.ElementTree import parse, fromstring
@@ -349,7 +372,9 @@ class loadFileManager:
         return result
 
     def read_pdf_for_image_extract(self):
-        """OCR 기능 연동을 위한 이미지 추출 모듈"""
+        """
+        OCR 기능 연동을 위한 이미지 추출 모듈
+        """
         # pip install pymuPDF pillow
         import fitz
         import io
@@ -384,12 +409,16 @@ class loadFileManager:
         # self.clear_img_folder()
             
     def clear_img_folder(self):
-        """clear img extraction output folder"""
+        """
+        clear img extraction output folder
+        """
         file_list = os.listdir(IMG_INPUT) 
         for file in file_list:
             RM_PATH = os.path.join(IMG_INPUT, file)
             os.remove(RM_PATH)
 
+
+    # readable 확장자
     read_function = {
         'pdf': read_pdf,
         'hwp': read_hwp_text,
