@@ -32,10 +32,18 @@ logger = get_logger()
 @router.get('/imageread')
 async def get_image_read(request: Request):
     """
-    no params\n
-    :return\n
-    Load ML Model
-    """
+	AI OCR의 결과값(rslt.json)을 읽어오는 함수
+    Docker Volume을 활용한 임시 연동 결과를 보기 위해서 구현함
+	
+	Parameters
+	---
+        noparams
+
+    Returns
+    ---
+        AI OCR 결과
+        
+	"""
     request.state.inspect = frame()
     try:
         if os.listdir(IMG_OUTPUT):
@@ -50,15 +58,23 @@ async def get_image_read(request: Request):
         return ex.FileSearchEx()
 
 @router.post("/uploadTest")
-async def upload_files_read_test(request: Request, background_tasks: BackgroundTasks, files: List[UploadFile] = File(...) , session: Session = Depends(db.session)):
+async def upload_files_read_test(request: Request, files: List[UploadFile] = File(...)):
     """
-    params: file \n
-    return: Last File's \n
-    return Sample: \n
-    "file contents"
-    """
+	File 업로드 테스트 함수
+    업로드한 파일을 분석 가능한 포맷으로 변경 후 Return
+	
+	Parameters
+	---
+        noparams
+
+    Returns
+    ---
+        File Object
+        
+	"""
     if not files:
         raise ex.XedmUploadFailEx()
+
     for file in files:
         contents = await file.read()
         FILE_PATH = os.path.join(UPLOAD_DIRECTORY, file.filename)
@@ -68,29 +84,21 @@ async def upload_files_read_test(request: Request, background_tasks: BackgroundT
         f = loadFileManager(FILE_PATH)
     
     return f.data
-# @router.get('/loadml')
-# async def load_ml_for_xedm(request: Request):
-#     """
-#     no params\n
-#     :return\n
-#     Load ML Model
-#     """
-#     request.state.inspect = frame()
-#     hoo.load_md(USING_MODEL_PATH)
-#     if not hoo.model:
-#         raise ex.XedmLoadFailEx()
-
-#     return m.MessageOk()
 
 @router.get('/session')
 async def connect_xedm_session(request: Request):
     """
-    XEDM Session Key 요청  
-    no params  
+	XEDM에 Session ID를 요청하는 함수
+	
+	Parameters
+	---
+        noparams
 
-    :return XEDM Session Key
-    
-    """
+    Returns
+    ---
+        XEDM Session ID
+        
+	"""
     request.state.inspect = frame()
     res = connect_session()
     logger.info(res)
@@ -103,11 +111,18 @@ async def connect_xedm_session(request: Request):
 @router.get('/xedmresponse', response_model = m.XedmToken)
 async def xedm_response_test(request: Request):
     """
-    XEDM에 전송하는 파일 포맷
-    no params  
-    descriptions: Xedm Token Test  
-    return XedmToken:  
-    """
+	XEDM에 요청한 데이터 포맷.
+    단순 참고용이므로 삭제해도 무방함
+	
+	Parameters
+	---
+        noparams
+
+    Returns
+    ---
+        XedmToken
+
+	"""
     request.state.inspect = frame()
     docid = "2021050310132101"
     page = ['1','25','33','124']
@@ -123,16 +138,27 @@ async def xedm_response_test(request: Request):
     return file_data
 
 
-
-
 @router.post("/uploadFiles")
-async def upload_files_predict_y(request: Request, background_tasks: BackgroundTasks,docid: str, sid: str, files: List[UploadFile] = File(...) ,session: Session = Depends(db.session)):
+async def upload_files_predict_y(request: Request, background_tasks: BackgroundTasks, docid: str, sid: str, files: List[UploadFile] = File(...) ,session: Session = Depends(db.session)):
     """
-    params: docid, sid(session id) file \n
-    return: Last File's \n
-    return Sample: \n
-    "OK"
-    """
+	XEDM으로부터 파일을 받아와서 BackgroundTasks로 Predict 진행
+    BackgroundTasks로 진행하지 않으면 XEDM측에서 응답을 기다리고 있어야 하기 때문에 바로 OK 메세지를 Return한다.
+	predict_using_pycaret()를 실행
+
+	Parameters
+    ---
+        requests: predict_using_pycaret() 인자값으로 사용
+        background_tasks: predict_using_pycaret() 실행 - FastAPI 제공
+        docid: predict_using_pycaret() 인자값으로 사용
+        sid: predict_using_pycaret() 인자값으로 사용
+        files: predict_using_pycaret() 인자값으로 사용
+        session: predict_using_pycaret() 인자값으로 사용
+	
+    Returns
+    ---
+        MessageOk() == "ok"
+
+	"""
     if not files:
         raise ex.XedmUploadFailEx()
     for file in files:
@@ -146,6 +172,19 @@ async def upload_files_predict_y(request: Request, background_tasks: BackgroundT
  
 
 def predict_using_pycaret(request, docid, sid, session, files):
+    """
+    AutoML tools: Pycaret
+    Pycaret이 생성한 모델 파일(ckpt)을 사용하여 새로 들어온 문서(files)에 예측을 적용함
+
+    Parameters
+    ---
+    request: 사용자의 요청 정보가 담긴 객체. 이 함수에서는 사용자의 ip를 사용함
+    docid: XEDM에서 받아온 Document ID
+    sid: XEDM에서 받아온 Session ID
+    session: Database 연결 유지를 위한 Session. XEDM session과 관련 없음
+    files: 문서 File 객체
+
+    """
     print("## START PREDICT ON pyCaret ###")
     file_data = OrderedDict()
     pageList : list = []
@@ -154,12 +193,13 @@ def predict_using_pycaret(request, docid, sid, session, files):
     file_path = os.path.join(UPLOAD_DIRECTORY, files.filename)
     file = loadFileManager(file_path)
     
+    # 확장자 검사
     if not file.data:
         raise ex.FileExtEx(file.name)
     
     obj = Files.create(session, auto_commit=False, name=file.name, ext=file.ext, ip_add= request.state.ip, doc_id=docid )
 
-    # Init 
+    # 초기화
     page = 0
     total_reg_count = 0
     tempList = []
@@ -217,7 +257,8 @@ def predict_using_pycaret(request, docid, sid, session, files):
 @router.get("/ocrTest")
 async def ai_ocr_test(request: Request, session: Session = Depends(db.session)):
     """
-    # Test AI OCR
+    AI OCR 테스트를 위한 함수
+    현재는 사용하지 않는다.
     """
     request.state.inspect = frame()
 
@@ -288,74 +329,3 @@ async def ai_ocr_test(request: Request, session: Session = Depends(db.session)):
 
     return file_data
 
-
-
-
-    # return file_data
-"""def predict_using_h2o(request, docid, sid, session, file):
-    print("## START PREDICT ON H2O")
-    file_data = OrderedDict()
-    pageList : list = []
-    ispid: str = 'F'
-
-    f = loadFileManager(UPLOAD_DIRECTORY + file.filename)
-    
-    if not f.data:
-        raise ex.FileExtEx(f.name)
-
-    obj = Files.create(session, auto_commit=False, name=f.name, ext=f.ext, ip_add= request.state.ip, doc_id=docid )
-    # print(obj.id, f.name, f.ext, f.data)
-    
-    # Init 
-    page = 0
-    total_reg_count = 0
-    tempList = []
-
-    logger.info(f.data)
-    for p in f.data:
-        df = preprocess_reg(p["td"])
-
-        page += 1
-        total_reg_count += df["reg_count"][0]
-        
-        if df["reg_count"][0] > 0:
-            pageList.append(str(page))
-            tempList.append(1)
-        else:
-            tempList.append(0)
-
-        Train.create(session, auto_commit=True, file_id=obj.id ,y=-1, page=p["page"]+1, text_data=p["td"],
-                                                reg_count=int(df["reg_count"][0]), column1=int(df["col1"][0]), column2=int(df["col2"][0]),
-                                                column3=int(df["col3"][0]),column4=int(df["col4"][0]),column5=int(df["col5"][0]),column6=int(df["col6"][0]),
-                                                column7=int(df["col7"][0]),column8=int(df["col8"][0]),column9=int(df["col9"][0]),column10=int(df["col10"][0])
-                    )
-    
-
-    page_list = Train.filter(file_id=obj.id).order_by("page").all()
-    df = preprocess(page_list)
-    # hf = hoo.df_to_hf(df)
-
-    # # 모델 안켜져 있을 경우 로드
-    # if not hoo.model:
-    #     hoo.load_md(USING_MODEL_PATH)
-    # hoo.predict(hf)
-
-    result_list = [str(p+1) for  p, value in enumerate(tempList) if value == 1]
-    # model = load_ml_model(USING_MODEL_PATH)
-    # if result_list or total_reg_count > 0:
-    if result_list:
-        ispid = "T"
-
-        info = literal_eval("{'is_pid': True}") # literal_eval: str -> dict
-        ret = Files.filter(id=obj.id)
-        ret.update(auto_commit=True, **info)
-
-
-    pinfo_data = {"name":"ext:pinfo", "value": ispid }
-    pPage_data = {"name":"ext:pPage", "value": ', '.join(result_list) }
-
-    file_data["attrData"] = {"docId": docid, "attrList":[pinfo_data, pPage_data]}
-    print(file_data)
-    res = xedm_post(file_data, sid)
-    print(res.text)
-    os.remove(UPLOAD_DIRECTORY + file.filename)"""

@@ -316,7 +316,7 @@ class loadFileManager:
         # # 차원축소2
         # answer2 = sum(all_sheet_value, [])
 
-        # 리스트 강제로 str로 함 ㅠ
+        # 리스트 강제로 str로 함
         return result
         
 
@@ -431,10 +431,3 @@ class loadFileManager:
         'json': read_json,
         'xml': read_xml
     }
-
-
-# a = loadFileManager(SAMPLE_FOLDER_PATH + 'docx_sample4.docx')
-# a = loadFileManager(SAMPLE_FOLDER_PATH + 'xml_sample.xml')
-# a = loadFileManager(SAMPLE_FOLDER_PATH + 'json_sample.json')
-
-# print(a.data)
