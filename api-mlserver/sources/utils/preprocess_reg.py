@@ -9,9 +9,19 @@ from common.consts import SAMPLE_FOLDER_PATH, KEYWORD_DICTIONARY_PATH
 
 def preprocess_reg(textdata:str):
     """
-    정규표현식
-    return: Dataframe
-    """
+	키워드 사전(dictionary_PATH)에서 읽어온 키워드들을 column으로 사용하여 
+    정규식으로 text에 키워드의 유무를 검사한다. 
+    검사 결과로 dataframe 생성 후 리턴
+	
+	Parameters
+	---
+        textdata: 검사하려고하는 text 데이터
+
+    Returns
+    ---
+        Dataframe: 키워드 검사 결과
+        
+	"""
     origin_regex = regexDictionaryManager()
 
     # 사전에서 키워드 추출
@@ -21,8 +31,6 @@ def preprocess_reg(textdata:str):
     ke.keywords.insert(0, "reg_count")
     print(ke.keyword_dictionary)
     data = []
-
-    # df = pd.DataFrame(data, columns= ke.keywords)
 
     # regex name, count, regex_ruslt_list
     _, c, _= origin_regex.get_all_regex(textdata)
@@ -35,22 +43,22 @@ def preprocess_reg(textdata:str):
     for i in range(0, len(ke.keywords)-1):
         # fileData / search() or findall()
         if ke.keyword_dictionary[i].search(textdata): 
-            # print(ke.keyword_dictionary[i].search(file.data[page]))
             row_list.append(1)
         else:
             row_list.append(0)
     
     data.append(row_list)
 
-    # print(data)
     c = ['reg_count','col1','col2','col3','col4','col5','col6','col7','col8','col9','col10']
     df = pd.DataFrame(data, columns= c)
     print(df)
     print("#")
     
-    # print(df.to_json(orient='records'))
     return df
 
+# ------------------ ------------------ #
+#  사용 예제
+# ------------------ ------------------ #
 # text = "asfsdfajksfdkal;sdafkl;jsdfkl"
 # df = preprocess_reg(text)
 # print(type(df["col1"][0]))

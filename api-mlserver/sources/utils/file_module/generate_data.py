@@ -6,6 +6,11 @@ from utils.file_module.keyword_extract import KeywordExtract
 from utils.file_module.load_file_manager import loadFileManager
 
 class GenerateData:
+    """
+    초기에 사용하던 클래스.
+    preprocess_reg생성 후 현재는 사용되지 않음 
+
+    """
     def __init__(self) -> None:
         self.origin_regex_dic = regexDictionaryManager()
         self.kwd = KeywordExtract(KEYWORD_DICTIONARY_PATH)

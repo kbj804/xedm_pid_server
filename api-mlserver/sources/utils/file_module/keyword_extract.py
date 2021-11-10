@@ -1,6 +1,20 @@
 import re
 
 class KeywordExtract:
+    """
+    개인정보검출시 필요한 KEY WORD
+
+    ---
+    Parameters
+
+        keyword_path: 단어가 들어가있는 txt파일
+
+    ---
+    Returns
+
+        단어를 keyword_dictionary에 Dictionary Type으로 저장
+
+    """
     def __init__(self, keyword_path) -> None:
         self.keywords : list = []
         # self.keywords=['reg_count']
@@ -18,12 +32,14 @@ class KeywordExtract:
             self.keyword_dictionary[i] = re.compile(kwd)
 
 
-# a = KeywordExtract(r"./tesseract_Project/Scripts/tp/nlp/dic.txt")
+# ------------------ ------------------ #
+#  사용 예제
+# ------------------ ------------------ #
+# a = KeywordExtract(PATH)
 # print(a.keywords)
 # print(a.keyword_dictionary)
 # text = "jdgajdsngj sdfsadkljn kfgoodf sd f njlksdfn agter  sdalfafter sdnfj good"
 
-# 사용 예제
 # for i in range(0, len(list(a.keyword_dictionary.keys()))):
 #     print(a.keyword_dictionary[i].search(text))
 
