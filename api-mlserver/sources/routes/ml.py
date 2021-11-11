@@ -34,8 +34,6 @@ async def show_data(request: Request):
     result = Train.filter(is_train=False).all()
     train_save_model(result)
 
-    # print("##RESULT##", result)
-    # return dict(id=result[0].id, reg_count=result[0].reg_count)
     return result
 
 
