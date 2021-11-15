@@ -539,8 +539,8 @@ def run(path_in, path_out, file_out):
 if __name__ == '__main__':
     print('Parsing Args ....')
     parser = argparse.ArgumentParser(description='Image To Text')
-    parser.add_argument('--in_', default='input', type=str)
-    parser.add_argument('--out_', default='output', type=str)
+    parser.add_argument('--in_', default='/ocr_work/input', type=str)
+    parser.add_argument('--out_', default='/ocr_work/output', type=str)
     parser.add_argument('--outfile_', default='y', type=str)
 
     args = parser.parse_args()   
