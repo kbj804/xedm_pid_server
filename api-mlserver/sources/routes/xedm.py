@@ -191,7 +191,7 @@ def predict_using_pycaret(request, docid, sid, session, files):
     ispid: str = 'F'
 
     file_path = os.path.join(UPLOAD_DIRECTORY, files.filename)
-    file = loadFileManager(file_path)
+    file = loadFileManager(file_path, docid)
     
     # 확장자 검사
     if not file.data:

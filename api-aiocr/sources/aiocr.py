@@ -492,6 +492,7 @@ def run(path_in, path_out, file_out):
         print('Exist')
 
         image_list, _, _ = file_utils.get_files(path_in)
+        print(image_list)
 
         if len(image_list) > 0:
             for i in range(len(image_list)):
@@ -503,12 +504,15 @@ def run(path_in, path_out, file_out):
                     p_num = '1'
 
                 print('> Start :', image_list[i])
+                key = os.path.basename(image_list[i])
+                key = key.split("_")
                 record, text, table_yn = t2t(path_=image_list[i], record=record, test='n', p_num=p_num, plan='1', save_subimg='n')
                 print('< Complete :', image_list[i])
                 if table_yn == 'y':
                     if file_out == 'y':
                         record.to_csv(path_out+'/record.csv', encoding='utf-8-sig')
                     record_dict['page'] = p_num
+                    record_dict['doc_id'] = key[0]
                     data = []
                     for j in range(len(record)):
                         data_sub = {}

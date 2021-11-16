@@ -35,9 +35,10 @@ class loadFileManager:
     File Object
     파일의 정보를 담고있는 객체로 사용
     """
-    def __init__(self, path):
+    def __init__(self, path, doc_id = "thisissampledocumentid"):
         # dir_path = os.getcwd()
         self.path = path
+        self.doc_id = doc_id
         basename = os.path.basename(self.path)
         self.name, self.dotext = os.path.splitext(basename)
         self.ext = self.dotext.replace(".",'',1)
@@ -404,7 +405,7 @@ class loadFileManager:
                     # load it to PIL
                     image = Image.open(io.BytesIO(image_bytes))
                     # save it to local disk
-                    IMG_PATH = os.path.join(IMG_INPUT, f"image{page_index+1}_{image_index}.{image_ext}")
+                    IMG_PATH = os.path.join(IMG_INPUT, f"{self.doc_id}_image{page_index+1}_{image_index}.{image_ext}")
                     image.save(open(IMG_PATH, "wb"))
         # self.clear_img_folder()
             

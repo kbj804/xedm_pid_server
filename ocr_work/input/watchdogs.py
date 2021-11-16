@@ -28,8 +28,8 @@ class Target:
                 
                 # 파일 입출력 대기(listening) 상태
                 elif pre == 1:
-                    print("[WARNING] listening ... ")
-
+                    print("[WARNING] File System Monitoring ... ")
+                    
                 # 모든 이미지가 다 추출되면 OCR 실행
                 else:
                     pre = 1
