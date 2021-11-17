@@ -32,9 +32,9 @@ logger = get_logger()
 @router.get('/imageread')
 async def get_image_read(request: Request):
     """
-	AI OCR의 결과값(rslt.json)을 읽어오는 함수
-    Docker Volume을 활용한 임시 연동 결과를 보기 위해서 구현함
-	
+	AI OCR의 결과값(rslt.json)을 읽어오는 함수. 
+    Docker Volume을 활용한 임시 연동 결과를 보기 위해서 구현함.
+
 	Parameters
 	---
         noparams
@@ -187,7 +187,7 @@ def predict_using_pycaret(request, docid, sid, session, files):
     """
     print("## START PREDICT ON pyCaret ###")
     file_data = OrderedDict()
-    pageList : list = []
+    # pageList : list = []
     ispid: str = 'F'
 
     file_path = os.path.join(UPLOAD_DIRECTORY, files.filename)
@@ -199,33 +199,34 @@ def predict_using_pycaret(request, docid, sid, session, files):
     
     obj = Files.create(session, auto_commit=False, name=file.name, ext=file.ext, ip_add= request.state.ip, doc_id=docid )
 
+
     # 초기화
-    page = 0
-    total_reg_count = 0
-    tempList = []
+    # page = 0
+    # total_reg_count = 0
+    # tempList = []
 
-    logger.info(file.data)
-    for p in file.data:
-        df = preprocess_reg(p["td"])
+    # logger.info(file.data)
+    # for p in file.data:
+    #     df = preprocess_reg(p["td"])
 
-        page += 1
-        total_reg_count += df["reg_count"][0]
+    #     page += 1
+    #     total_reg_count += df["reg_count"][0]
         
-        if df["reg_count"][0] > 0:
-            pageList.append(str(page))
-            tempList.append(1)
-        else:
-            tempList.append(0)
+    #     if df["reg_count"][0] > 0:
+    #         pageList.append(str(page))
+    #         tempList.append(1)
+    #     else:
+    #         tempList.append(0)
 
-        Train.create(session, auto_commit=True, file_id=obj.id ,y=-1, page=p["page"]+1, text_data=p["td"],
-                                                reg_count=int(df["reg_count"][0]), column1=int(df["col1"][0]), column2=int(df["col2"][0]),
-                                                column3=int(df["col3"][0]),column4=int(df["col4"][0]),column5=int(df["col5"][0]),column6=int(df["col6"][0]),
-                                                column7=int(df["col7"][0]),column8=int(df["col8"][0]),column9=int(df["col9"][0]),column10=int(df["col10"][0])
-                    )
-    
+    #     Train.create(session, auto_commit=True, file_id=obj.id ,y=-1, page=p["page"]+1, text_data=p["td"],
+    #                                             reg_count=int(df["reg_count"][0]), column1=int(df["col1"][0]), column2=int(df["col2"][0]),
+    #                                             column3=int(df["col3"][0]),column4=int(df["col4"][0]),column5=int(df["col5"][0]),column6=int(df["col6"][0]),
+    #                                             column7=int(df["col7"][0]),column8=int(df["col8"][0]),column9=int(df["col9"][0]),column10=int(df["col10"][0])
+    #                 )
+    total_reg_count, df = create_trains(session, file.data, docid)
 
-    page_list = Train.filter(file_id=obj.id).order_by("page").all()
-    df = preprocess(page_list)
+    # page_list = Train.filter(file_id=obj.id).order_by("page").all()
+    # df = preprocess(page_list)
 
     # 모델 안켜져 있을 경우 로드
 
@@ -253,6 +254,35 @@ def predict_using_pycaret(request, docid, sid, session, files):
 
     # remove upload file
     os.remove(file_path)
+
+
+
+def create_trains(session, file_data, doc_id):
+    pageList, tempList = []
+    page, total_reg_count = 0
+    file = Files.get(doc_id=doc_id)
+    for p in file_data:
+        df = preprocess_reg(p["td"])
+
+        page += 1
+        total_reg_count += df["reg_count"][0]
+        
+        if df["reg_count"][0] > 0:
+            pageList.append(str(page))
+            tempList.append(1)
+        else:
+            tempList.append(0)
+
+        Train.create(session, auto_commit=True, file_id=file.id ,y=-1, page=p["page"]+1, text_data=p["td"],
+                                                reg_count=int(df["reg_count"][0]), column1=int(df["col1"][0]), column2=int(df["col2"][0]),
+                                                column3=int(df["col3"][0]),column4=int(df["col4"][0]),column5=int(df["col5"][0]),column6=int(df["col6"][0]),
+                                                column7=int(df["col7"][0]),column8=int(df["col8"][0]),column9=int(df["col9"][0]),column10=int(df["col10"][0])
+                    )
+
+        page_list = Train.filter(file_id=file.id).order_by("page").all()
+        df = preprocess(page_list)
+        
+        return total_reg_count, df
 
 @router.get("/ocrTest")
 async def ai_ocr_test(request: Request, session: Session = Depends(db.session)):
