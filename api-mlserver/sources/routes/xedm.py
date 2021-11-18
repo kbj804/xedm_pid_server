@@ -197,7 +197,7 @@ def predict_using_pycaret(request, docid, sid, session, files):
     if not file.data:
         raise ex.FileExtEx(file.name)
     
-    obj = Files.create(session, auto_commit=False, name=file.name, ext=file.ext, ip_add= request.state.ip, doc_id=docid )
+    obj = Files.create(session, auto_commit=True, name=file.name, ext=file.ext, ip_add= request.state.ip, doc_id=docid )
 
 
     # 초기화
@@ -223,44 +223,49 @@ def predict_using_pycaret(request, docid, sid, session, files):
     #                                             column3=int(df["col3"][0]),column4=int(df["col4"][0]),column5=int(df["col5"][0]),column6=int(df["col6"][0]),
     #                                             column7=int(df["col7"][0]),column8=int(df["col8"][0]),column9=int(df["col9"][0]),column10=int(df["col10"][0])
     #                 )
-    total_reg_count, df = create_trains(session, file.data, docid)
+    create_trains(session, file.data, docid, sid)
 
     # page_list = Train.filter(file_id=obj.id).order_by("page").all()
     # df = preprocess(page_list)
 
     # 모델 안켜져 있을 경우 로드
 
-    # PyCaret Model Load
-    preds = pycaret_pred(df)
+    # # PyCaret Model Load
+    # preds = pycaret_pred(df)
 
-    result_list = [str(p+1) for  p, value in enumerate(preds) if value == 1]
-    # model = load_ml_model(USING_MODEL_PATH)
+    # result_list = [str(p+1) for  p, value in enumerate(preds) if value == 1]
+    # # model = load_ml_model(USING_MODEL_PATH)
+    # # if result_list or total_reg_count > 0:
     # if result_list or total_reg_count > 0:
-    if result_list or total_reg_count > 0:
-        ispid = "T"
+    #     ispid = "T"
 
-        info = literal_eval("{'is_pid': True}") # literal_eval: str -> dict
-        ret = Files.filter(id=obj.id)
-        ret.update(auto_commit=True, **info)
+    #     info = literal_eval("{'is_pid': True}") # literal_eval: str -> dict
+    #     ret = Files.filter(id=obj.id)
+    #     ret.update(auto_commit=True, **info)
 
 
-    pinfo_data = {"name":"ext:pinfo", "value": ispid }
-    pPage_data = {"name":"ext:pPage", "value": ', '.join(result_list) }
+    # pinfo_data = {"name":"ext:pinfo", "value": ispid }
+    # pPage_data = {"name":"ext:pPage", "value": ', '.join(result_list) }
 
-    file_data["attrData"] = {"docId": docid, "attrList":[pinfo_data, pPage_data]}
-    print(file_data)
-    res = xedm_post(file_data, sid)
-    print(res.text)
+    # file_data["attrData"] = {"docId": docid, "attrList":[pinfo_data, pPage_data]}
+    # print(file_data)
+    # res = xedm_post(file_data, sid)
+    # print(res.text)
 
     # remove upload file
     os.remove(file_path)
 
 
 
-def create_trains(session, file_data, doc_id):
-    pageList, tempList = []
-    page, total_reg_count = 0
-    file = Files.get(doc_id=doc_id)
+def create_trains(session, file_data: list, doc_id: str, sid: str):
+    result_file_data = OrderedDict()
+    pageList: list = []
+    tempList: list = []
+    page: int = 0
+    total_reg_count: int = 0
+    ispid: str = 'F'
+
+    file = Files.filter(doc_id=doc_id).order_by("-id").first()
     for p in file_data:
         df = preprocess_reg(p["td"])
 
@@ -273,7 +278,7 @@ def create_trains(session, file_data, doc_id):
         else:
             tempList.append(0)
 
-        Train.create(session, auto_commit=True, file_id=file.id ,y=-1, page=p["page"]+1, text_data=p["td"],
+        Train.create(session, auto_commit=True, file_id=file.id ,y=-1, page=int(p["page"])+1, text_data=p["td"],
                                                 reg_count=int(df["reg_count"][0]), column1=int(df["col1"][0]), column2=int(df["col2"][0]),
                                                 column3=int(df["col3"][0]),column4=int(df["col4"][0]),column5=int(df["col5"][0]),column6=int(df["col6"][0]),
                                                 column7=int(df["col7"][0]),column8=int(df["col8"][0]),column9=int(df["col9"][0]),column10=int(df["col10"][0])
@@ -281,81 +286,56 @@ def create_trains(session, file_data, doc_id):
 
         page_list = Train.filter(file_id=file.id).order_by("page").all()
         df = preprocess(page_list)
-        
-        return total_reg_count, df
 
-@router.get("/ocrTest")
-async def ai_ocr_test(request: Request, session: Session = Depends(db.session)):
-    """
-    AI OCR 테스트를 위한 함수
-    현재는 사용하지 않는다.
-    """
+
+        # PyCaret Model Load
+        preds = pycaret_pred(df)
+
+        result_list = [str(p+1) for  p, value in enumerate(preds) if value == 1]
+        # model = load_ml_model(USING_MODEL_PATH)
+        # if result_list or total_reg_count > 0:
+        if result_list or total_reg_count > 0:
+            ispid = "T"
+
+            info = literal_eval("{'is_pid': True}") # literal_eval: str -> dict
+            ret = Files.filter(id=file.id)
+            ret.update(auto_commit=True, **info)
+
+
+        pinfo_data = {"name":"ext:pinfo", "value": ispid }
+        pPage_data = {"name":"ext:pPage", "value": ', '.join(result_list) }
+
+        result_file_data["attrData"] = {"docId": doc_id, "attrList":[pinfo_data, pPage_data]}
+        print(result_file_data)
+        res = xedm_post(result_file_data, sid)
+        print(res.text)
+        
+        # return total_reg_count, df
+
+
+    
+
+@router.post("/ocrtest", status_code = 201)
+async def ai_ocr_test(request: Request, data:m.FileData, session: Session = Depends(db.session)):
+    """AI OCR 연동
+    watchdog.py에서 파일시스템을 모니터링 하다가 파일이 업로드 되면 이 함수로 들어와서 처리됨
+
+	Parameters
+    ---
+        data: POST data type, file내부 데이터와 xedm documnet id, xedm session id 가 포함되어 있음
+        session: predict_using_pycaret() 인자값으로 사용
+	
+    Returns
+    ---
+        MessageOk() == "ok"
+
+	"""
+
     request.state.inspect = frame()
 
-    test = aiocr(IMG_OUTPUT_PATH)
-    result = test.run()
+    create_trains(session, data.file_data, data.doc_id, data.sid)
 
-    # start PID
-    file_data = OrderedDict()
-    pageList : list = []
-    ispid: str = 'F'
-    total_reg_count : int = 0
-    page : int = 0
-    tempList : list = []
-
-    # config for testing
-    fileid = 12345
-    docid = 12345
-
-    obj = Files.create(session, auto_commit=False, name='test', ext='pdf', ip_add= request.state.ip, doc_id=docid )
-    for p in result:
-        df = preprocess_reg(p["td"])
-
-        # page += 1
-        total_reg_count += df["reg_count"][0]
-        
-        if df["reg_count"][0] > 0:
-            pageList.append(str(page))
-            tempList.append(1)
-        else:
-            tempList.append(0)
-
-        Train.create(session, auto_commit=True, file_id = obj.id ,y=-1, page=p["page"], text_data=p["td"],
-                                                reg_count=int(df["reg_count"][0]), column1=int(df["col1"][0]), column2=int(df["col2"][0]),
-                                                column3=int(df["col3"][0]),column4=int(df["col4"][0]),column5=int(df["col5"][0]),column6=int(df["col6"][0]),
-                                                column7=int(df["col7"][0]),column8=int(df["col8"][0]),column9=int(df["col9"][0]),column10=int(df["col10"][0])
-                    )
-    
-
-    page_list = Train.filter(file_id= obj.id).order_by("page").all()
-    df = preprocess(page_list)
-
-    # 모델 안켜져 있을 경우 로드
-    # PyCaret Model Load
-    if df.empty:
-        raise ex.DataframeEmpty(df)
-        
-    preds = pycaret_pred(df)
-
-    result_list = [str(p+1) for  p, value in enumerate(preds) if value == 1]
-    # model = load_ml_model(USING_MODEL_PATH)
-    # if result_list or total_reg_count > 0:
-    if result_list or total_reg_count > 0:
-        ispid = "T"
-
-        info = literal_eval("{'is_pid': True}") # literal_eval: str -> dict
-        ret = Files.filter(id=obj.id)
-        ret.update(auto_commit=True, **info)
+    return m.MessageOk()
 
 
-    pinfo_data = {"name":"ext:pinfo", "value": ispid }
-    pPage_data = {"name":"ext:pPage", "value": ', '.join(result_list) }
-
-    file_data["attrData"] = {"docId": docid, "attrList":[pinfo_data, pPage_data]}
-    print(file_data)
-    
-    # res = xedm_post(file_data, sid)
-    # print(res.text)
-
-    return file_data
 

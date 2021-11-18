@@ -6,6 +6,9 @@ from subprocess import call
 import requests
 import json
 class Target:
+    """기능 동작만 하게 구현해놓았음. 예외처리등 처리해야할게 많다.
+    """
+
     watchDir = os.getcwd()
     print(watchDir)
     #watchDir에 감시하려는 디렉토리를 명시한다.
@@ -38,8 +41,11 @@ class Target:
                     pre = 1
                     session = get_sessionid()
                     print(session)
-                    p = read_json(RESULT_PATH)
-                    print(p)
+                    file_data = read_json(RESULT_PATH)
+                    print(file_data)
+                    print(file_data[0]["doc_id"])
+
+                    get_predict(file_data, file_data[0]["doc_id"], session)
 
                     # watchdogs 파일 제외하고 삭제
                     for file in os.listdir(self.watchDir):
@@ -75,6 +81,23 @@ def get_sessionid():
     session = res['list'][0]['xedmSession']
 
     return session
+
+def get_predict(file_data, doc_id, sid):
+    """
+    """
+    ML_URL = "192.168.21.204:8001"
+    url = f'http://{ML_URL}/api/xedm/ocrtest'
+
+    headers = {'Content-Type':'application/json'}
+
+    data = {'file_data':file_data, 'doc_id':doc_id, 'sid':sid}
+
+    print("돼라")
+    res = requests.post(url, headers=headers, data=json.dumps(data))
+    print(res)
+    
+    return res
+
 
 class Handler(FileSystemEventHandler):
 #FileSystemEventHandler 클래스를 상속받음.

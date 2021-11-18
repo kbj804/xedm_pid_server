@@ -13,11 +13,10 @@ class UserRegister(BaseModel):
     pw: str = None
 
 # Enum : 이 중에 한가지만 들어올 수 있음
-class SnsType(str, Enum):
-    email: str = "email"
-    facebook: str = "facebook"
-    google: str = "google"
-    kakao: str = "kakao"
+class FileData(BaseModel):
+    file_data:list = None
+    doc_id: str = None
+    sid: str = None
 
 # Response Model. 
 class Token(BaseModel):
