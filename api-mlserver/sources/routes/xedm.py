@@ -186,9 +186,6 @@ def predict_using_pycaret(request, docid, sid, session, files):
 
     """
     print("## START PREDICT ON pyCaret ###")
-    file_data = OrderedDict()
-    # pageList : list = []
-    ispid: str = 'F'
 
     file_path = os.path.join(UPLOAD_DIRECTORY, files.filename)
     file = loadFileManager(file_path, docid)
@@ -197,67 +194,19 @@ def predict_using_pycaret(request, docid, sid, session, files):
     if not file.data:
         raise ex.FileExtEx(file.name)
     
-    obj = Files.create(session, auto_commit=True, name=file.name, ext=file.ext, ip_add= request.state.ip, doc_id=docid )
+    Files.create(session, auto_commit=True, name=file.name, ext=file.ext, ip_add= request.state.ip, doc_id=docid )
 
-
-    # 초기화
-    # page = 0
-    # total_reg_count = 0
-    # tempList = []
-
-    # logger.info(file.data)
-    # for p in file.data:
-    #     df = preprocess_reg(p["td"])
-
-    #     page += 1
-    #     total_reg_count += df["reg_count"][0]
-        
-    #     if df["reg_count"][0] > 0:
-    #         pageList.append(str(page))
-    #         tempList.append(1)
-    #     else:
-    #         tempList.append(0)
-
-    #     Train.create(session, auto_commit=True, file_id=obj.id ,y=-1, page=p["page"]+1, text_data=p["td"],
-    #                                             reg_count=int(df["reg_count"][0]), column1=int(df["col1"][0]), column2=int(df["col2"][0]),
-    #                                             column3=int(df["col3"][0]),column4=int(df["col4"][0]),column5=int(df["col5"][0]),column6=int(df["col6"][0]),
-    #                                             column7=int(df["col7"][0]),column8=int(df["col8"][0]),column9=int(df["col9"][0]),column10=int(df["col10"][0])
-    #                 )
     create_trains(session, file.data, docid, sid)
 
-    # page_list = Train.filter(file_id=obj.id).order_by("page").all()
-    # df = preprocess(page_list)
-
-    # 모델 안켜져 있을 경우 로드
-
-    # # PyCaret Model Load
-    # preds = pycaret_pred(df)
-
-    # result_list = [str(p+1) for  p, value in enumerate(preds) if value == 1]
-    # # model = load_ml_model(USING_MODEL_PATH)
-    # # if result_list or total_reg_count > 0:
-    # if result_list or total_reg_count > 0:
-    #     ispid = "T"
-
-    #     info = literal_eval("{'is_pid': True}") # literal_eval: str -> dict
-    #     ret = Files.filter(id=obj.id)
-    #     ret.update(auto_commit=True, **info)
-
-
-    # pinfo_data = {"name":"ext:pinfo", "value": ispid }
-    # pPage_data = {"name":"ext:pPage", "value": ', '.join(result_list) }
-
-    # file_data["attrData"] = {"docId": docid, "attrList":[pinfo_data, pPage_data]}
-    # print(file_data)
-    # res = xedm_post(file_data, sid)
-    # print(res.text)
-
-    # remove upload file
     os.remove(file_path)
 
 
 
 def create_trains(session, file_data: list, doc_id: str, sid: str):
+    """
+    AI OCR과 연동을 위해 만든 함수
+    
+    """
     result_file_data = OrderedDict()
     pageList: list = []
     tempList: list = []
@@ -288,29 +237,29 @@ def create_trains(session, file_data: list, doc_id: str, sid: str):
         df = preprocess(page_list)
 
 
-        # PyCaret Model Load
-        preds = pycaret_pred(df)
+    # PyCaret Model Load
+    preds = pycaret_pred(df)
 
-        result_list = [str(p+1) for  p, value in enumerate(preds) if value == 1]
-        # model = load_ml_model(USING_MODEL_PATH)
-        # if result_list or total_reg_count > 0:
-        if result_list or total_reg_count > 0:
-            ispid = "T"
+    result_list = [str(p+1) for  p, value in enumerate(preds) if value == 1]
+    # model = load_ml_model(USING_MODEL_PATH)
+    # if result_list or total_reg_count > 0:
+    if result_list or total_reg_count > 0:
+        ispid = "T"
 
-            info = literal_eval("{'is_pid': True}") # literal_eval: str -> dict
-            ret = Files.filter(id=file.id)
-            ret.update(auto_commit=True, **info)
+        info = literal_eval("{'is_pid': True}") # literal_eval: str -> dict
+        ret = Files.filter(id=file.id)
+        ret.update(auto_commit=True, **info)
 
 
-        pinfo_data = {"name":"ext:pinfo", "value": ispid }
-        pPage_data = {"name":"ext:pPage", "value": ', '.join(result_list) }
+    pinfo_data = {"name":"ext:pinfo", "value": ispid }
+    pPage_data = {"name":"ext:pPage", "value": ', '.join(result_list) }
 
-        result_file_data["attrData"] = {"docId": doc_id, "attrList":[pinfo_data, pPage_data]}
-        print(result_file_data)
-        res = xedm_post(result_file_data, sid)
-        print(res.text)
-        
-        # return total_reg_count, df
+    result_file_data["attrData"] = {"docId": doc_id, "attrList":[pinfo_data, pPage_data]}
+    print(result_file_data)
+    res = xedm_post(result_file_data, sid)
+    print(res.text)
+    
+    # return total_reg_count, df
 
 
     

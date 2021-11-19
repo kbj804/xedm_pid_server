@@ -102,7 +102,11 @@ class loadFileManager:
                 if isinstance(element, LTTextContainer):
                     page_contents += element.get_text()
             result.append({"page":i, "td":page_contents})
-        self.read_pdf_for_image_extract()
+        for page in result:
+            if page["td"] == '':
+                self.read_pdf_for_image_extract()
+            else:
+                pass
         
         return result
         
