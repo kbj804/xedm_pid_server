@@ -1,3 +1,4 @@
+
 ## XEDM PID Server
 
 ## BUILD
@@ -98,3 +99,21 @@ Machine Learning Model File을 저장 및 관리하기 위한 라이브러리
 ##### 파일 업로드  
 >```dvc push```  
 
+## OCR 연동
+```api-aiocr``` : docker - volume 활용
+조건: 두개의 worker를 띄워야 함. 추후 ```Celery```로 처리 필요.
+
+### worker 실행
+>```
+>python [Project]/ocr_work/input/watchdogs.py
+>python [Project]/ocr_work/output/watchdogs.py
+>```
+
+##### input/watchdogs.py
+> ```input``` 폴더에 PDF 파일에서 추출된 이미지가 저장되면 해당 이미지를 읽어 OCR 요청
+
+##### output/watchdogs.py
+> ```output```폴더에 OCR결과값(```rlst.json```)이 저장되면 해당 파일을 읽어 ```api-mlserver```에 개인정보검출 요청
+
+### 동작 과정
+![ocr연동](./api-mlserver/etc/ai_ocr_connect.png)
